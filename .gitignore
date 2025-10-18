@@ -5,3 +5,5 @@
 *.ali
 
 target/**
+source/ada/make.log
+

@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='iso-8859-15'?>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' 
+           xmlns:xcl='http://www.nonodev.com/bnlbot' 
+           elementFormDefault='qualified' 
+           attributeFormDefault='unqualified' 
+           targetNamespace='http://www.nonodev.com/bnlbot'>		   
+  <xs:annotation>
+    <xs:documentation xml:lang='en'>
+          XML schema describing trm-files.
+          Changes:
+          Date:         Author:  Changes:
+          14-Oct-2011   BNL      Original version       
+    </xs:documentation>
+  </xs:annotation>
+
+<!--=========================================================================-->
+<!-- general declared types                                                  -->
+<!--=========================================================================-->
+  <xs:include schemaLocation='commontype.xsd'/> 
+
+<!--=========================================================================-->
+<!-- locally declared types                                                  -->
+<!--=========================================================================-->
+
+
+  <xs:complexType name='codeItemTrType'>
+    <xs:attribute name='Code'   type='xs:int' use='required'/>
+    <xs:attribute name='Text'   type='xcl:string80Type' use='required'/>
+  </xs:complexType>
+  
+
+  <xs:complexType name='codeListTrType'>
+    <xs:sequence>
+      <xs:element name='CodeItemTr' type='xcl:codeItemTrType'  minOccurs='1' maxOccurs='unbounded'/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  
+  
+  <xs:complexType name='translationType'>
+    <xs:sequence>
+      <xs:element name='CodeListTr' type='xcl:codeListTrType'  minOccurs='0' maxOccurs='1'/>
+    </xs:sequence>
+    <xs:attribute name='Language'   type='xcl:userLanguageType' use='required'/>
+    <xs:attribute name='LongDesc'   type='xcl:string80Type' use='required'/>
+    <xs:attribute name='ShortDesc' type='xcl:string80Type' use='required'/>
+  </xs:complexType>
+  
+  
+  
+  <xs:complexType name='translationListType'>
+    <xs:sequence>
+      <xs:element name='Translation' type='xcl:translationType'  minOccurs='1' maxOccurs='unbounded'/>
+    </xs:sequence>
+  </xs:complexType>
+
+  
+  <xs:complexType name='codeItemType'>
+    <xs:attribute name='Code'   type='xs:int' use='required'/>
+    <xs:attribute name='Text'   type='xcl:nullableString30Type' use='required'/>
+    <xs:attribute name='Define' type='xcl:string80Type' use='required'/>
+  </xs:complexType>
+
+  <xs:complexType name='codeListType'>
+    <xs:sequence>
+      <xs:element name='CodeItem' type='xcl:codeItemType'  minOccurs='1' maxOccurs='unbounded'/>
+    </xs:sequence>
+    <xs:attribute name='Define'      type='xcl:nullableString80Type' use='required'/>
+    <xs:attribute name='Description' type='xcl:nullableString80Type' use='required'/>
+  </xs:complexType>
+  
+  <xs:complexType name='presentationType'>
+     <xs:attribute name='Size'     type='xs:int'                   use='required'/>
+     <xs:attribute name='LongDesc' type='xcl:nullableString80Type' use='required'/>
+  </xs:complexType>
+
+
+<!--=========================================================================-->
+<!-- Main Structures                                                         -->
+<!--=========================================================================-->
+  <xs:complexType name='termType'>
+    <xs:sequence>
+      <xs:element name='Presentation'    type='xcl:presentationType'    minOccurs='1' maxOccurs='1'/>
+      <xs:element name='CodeList'        type='xcl:codeListType'        minOccurs='0' maxOccurs='1'/>
+      <xs:element name='TranslationList' type='xcl:translationListType' minOccurs='1' maxOccurs='1'/>
+    </xs:sequence>
+    <xs:attribute name='Name' type='xcl:string40Type'      use='required'/>
+    <xs:attribute name='Type' type='xs:int'                use='required'/>
+    <xs:attribute name='Size' type='xs:int'                use='required'/>
+  </xs:complexType>
+
+  <xs:complexType name='bnlBotType'>
+    <xs:sequence>
+      <xs:element name='Term' type='xcl:termType' minOccurs='1' maxOccurs='1'/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <!--  The Definition  ! -->
+  <xs:element name='BnlBot' type='xcl:bnlBotType' />
+</xs:schema>

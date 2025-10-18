@@ -1,0 +1,43 @@
+set datafile commentschars '#'
+set datafile separator '|'
+
+set terminal pngcairo size 1920,1080 background '#ffffff'
+#set terminal pngcairo size 1024,768 background '#ffffff'
+set output target_png
+
+set grid
+set key top left
+
+set title "Equity for strategies for user \n" . user . " : " . ts 
+
+#set yrange [-3000:4000]
+#set y2range [-3000:4000]
+#set ytics 500
+#set y2tics 500
+
+set y2tics 
+set ylabel "kr"
+set y2label "kr"
+set link y2 
+
+set xdata time
+set timefmt  "%Y-%m-%d %H:%M:%S"
+set format x "%Y-%m-%d"
+
+set xtics rotate by 90 offset 0, -5
+set xlabel "Datum" offset 0,-4
+set bmargin 8
+
+plot for [file in files] file using 1:2 with lines title system("basename " . file . " .dat | tr '_' '-'")
+     
+ 
+ 
+#plot  data_file1 . ".dat" using 1:2 with lines title data_file1, \
+#      data_file2 . ".dat" using 1:2 with lines title data_file2, \
+#      data_file3 . ".dat" using 1:2 with lines title data_file3, \
+#      data_file4 . ".dat" using 1:2 with lines title data_file4, \
+#      data_file5 . ".dat" using 1:2 with lines title data_file5, \
+#      data_file6 . ".dat" using 1:2 with lines title data_file6, \
+#      data_file7 . ".dat" using 1:2 with lines title data_file7, \
+#      data_file8 . ".dat" using 1:2 with lines title data_file8
+         

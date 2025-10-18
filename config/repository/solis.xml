@@ -1,0 +1,95 @@
+<!--
+<?xml version='1.0'?>
+-->
+<!--
+  =====================================================================
+  COPYRIGHT     Consafe Logistics AB,Lund
+  FILE NAME     BET.xml
+  RESPONSIBLE   R/D
+
+  DESCRIPTION   Config file for the m2_handler and the make_stingray_repository script.
+  =====================================================================
+  Version      Author      Date        Description
+  =====================================================================
+  9.6          BNL         02-Nov-2006 Original version
+  9.8-16631    SNE         23-Jun-2009 Stand alone flag added in M-R and L_U_A_I
+  =====================================================================
+-->
+<Process>
+  <paths>
+    <tables>
+      <definitions>
+        <directory>$BOT_CONFIG/repository/tables</directory>
+        <pattern>table_*.xml</pattern>
+        <prefix>table</prefix>
+      </definitions>
+    </tables>
+
+    <clreqs>
+      <definitions>
+        <directory>$BOT_CONFIG/repository/tables</directory>
+        <pattern>req_*.xml</pattern>
+        <prefix>req</prefix>
+      </definitions>
+    </clreqs>
+
+    <terms>
+      <definitions>
+        <directory>$BOT_CONFIG/repository/terms</directory>
+        <pattern>trm_*.xml</pattern>
+        <prefix>trm</prefix>
+      </definitions>
+    </terms>
+
+    <codes>
+      <definitions>
+        <directory>$BOT_CONFIG/repository/codes</directory>
+        <pattern>trm_*.xml</pattern>
+        <prefix>trm</prefix>
+      </definitions>
+    </codes>
+
+    <labels>
+      <definitions>
+        <directory>$BOT_CONFIG/repository/labels</directory>
+        <pattern>lab_*.xml</pattern>
+        <prefix>lab</prefix>
+      </definitions>
+    </labels>
+
+    <views>
+      <definitions>
+        <directory>$BOT_CONFIG/repository/views</directory>
+        <pattern>view_*.xml</pattern>
+        <prefix>view</prefix>
+      </definitions>
+    </views>
+    <repositoryRoot>
+      <definitions>
+        <directory>$BOT_CONFIG/</directory>
+      </definitions>
+    </repositoryRoot>
+    <bin>
+      <definitions>
+        <directory>$BOT_CONFIG/</directory>
+      </definitions>
+    </bin>
+    <IDFRoot>
+      <definitions>
+        <directory>$BOT_CONFIG/</directory>
+      </definitions>
+    </IDFRoot>
+
+    <mustang>
+      <definitions>
+        <module>$BOT_CONFIG/m2_modules.xml</module>
+        <r-menu>$BOT_CONFIG/m2_r_menus.xml</r-menu>
+      </definitions>
+    </mustang>
+
+</paths>
+
+
+</Process>
+
+

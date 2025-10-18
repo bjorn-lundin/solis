@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='iso-8859-15'?>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' 
+           xmlns:xcl='http://www.nonodev.com/bnlbot' 
+           elementFormDefault='qualified' 
+           attributeFormDefault='unqualified' 
+           targetNamespace='http://www.nonodev.com/bnlbot'>		   
+  <xs:annotation>
+    <xs:documentation xml:lang='en'>
+          XML schema describing reg-files.
+          Changes:
+          Date:         Author:  Changes:
+          13-Oct-2014   BNL      Original version     
+          #5088             
+    </xs:documentation>
+  </xs:annotation>
+
+<!--=========================================================================-->
+<!-- general declared types                                                  -->
+<!--=========================================================================-->
+  <xs:include schemaLocation='commontype.xsd'/> 
+
+<!--=========================================================================-->
+<!-- locally declared types                                                  -->
+<!--=========================================================================-->
+  
+  <xs:complexType name='columnType'>
+      <xs:attribute name='Name'        type='xs:normalizedString' use='required'/>
+      <xs:attribute name='Key'         type='xs:normalizedString' use='optional'/>
+      <xs:attribute name='As'          type='xs:normalizedString' use='optional'/>
+      <xs:attribute name='AsOracle'    type='xs:normalizedString' use='optional'/>
+      <xs:attribute name='AsSqlServer' type='xs:normalizedString' use='optional'/>
+      <xs:attribute name='Type'        type='xs:int'              use='optional'/>
+      <xs:attribute name='Length'      type='xs:int'              use='optional'/>      
+  </xs:complexType>
+  
+  <xs:complexType name='tableType'>
+      <xs:attribute name='Name' type='xs:normalizedString'  use='required'/>
+  </xs:complexType>
+  
+  <xs:complexType name='columnsType'>
+    <xs:sequence>
+      <xs:element name='Column' type='xcl:columnType' minOccurs='0' maxOccurs='unbounded'/>
+      <xs:element name='Table'  type='xcl:tableType'  minOccurs='0' maxOccurs='unbounded'/>
+    </xs:sequence>
+  </xs:complexType>
+
+<!--=========================================================================-->
+<!-- Main Structures                                                         -->
+<!--=========================================================================-->
+  <xs:complexType name='viewType'>
+    <xs:sequence>
+      <xs:element name='Description'    type='xcl:string80Type'    minOccurs='1' maxOccurs='1'/>
+      <xs:element name='Columns'        type='xcl:columnsType'     minOccurs='1' maxOccurs='1'/>
+      <xs:element name='From'           type='xs:normalizedString' minOccurs='1' maxOccurs='1'/>
+      <xs:element name='FromOracle'     type='xs:normalizedString' minOccurs='0' maxOccurs='1'/>
+      <xs:element name='FromSqlServer'  type='xs:normalizedString' minOccurs='0' maxOccurs='1'/>     
+      <xs:element name='FromPostgresql' type='xs:normalizedString' minOccurs='0' maxOccurs='1'/>     
+    </xs:sequence>
+    <xs:attribute name='Name'         type='xcl:string40Type'    use='required'/>
+    <xs:attribute name='Type'         type='xs:int'              use='required'/>
+    <xs:attribute name='dependsOn'    type='xs:normalizedString' use='optional'/>
+  </xs:complexType>
+
+  <xs:complexType name='bnlBotType'>
+    <xs:sequence>
+      <xs:element name='View' type='xcl:viewType' minOccurs='1' maxOccurs='1'/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--  The Definition  ! -->
+  <xs:element name='BnlBot' type='xcl:bnlBotType' />
+</xs:schema>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<BnlBot xmlns="http://www.nonodev.com/bnlbot" xmlns:xcl="http://www.nonodev.com/bnlbot" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Term Name="runnernamenum" Type="1" Size="2">
+    <Presentation Size="0" LongDesc=""/>
+    <TranslationList>
+      <Translation Language="swe" LongDesc="Runner name num" ShortDesc="Runner name num"/>
+      <Translation Language="eng" LongDesc="Runner name num" ShortDesc="Runner name num"/>
+    </TranslationList>                                                                 
+  </Term>
+</BnlBot>

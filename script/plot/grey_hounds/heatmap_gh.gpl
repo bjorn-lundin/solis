@@ -1,0 +1,99 @@
+set datafile commentschars '#'
+set datafile separator '|'
+
+set terminal pngcairo size 2048,1536 background '#ffffff'
+#set terminal pngcairo size 1024,768 background '#ffffff'
+set output target_png
+
+set title "Greyhounds GB - " . desc . " for size=40 skr and matched hitrate for market type " . type  
+
+set cblabel "skr" 
+#set grid
+set key off
+
+set ylabel "max layodds * 10"
+set xlabel "delta tics"
+
+set xrange [-2:0]
+set yrange [20:50]
+
+#set ytics (\
+#"" -1,\
+#"01-04" 0,\
+#"05-07" 1,\
+#"08-10" 2,\
+#"11-13" 3,\
+#"14-17" 4,\
+#"18-20" 5,\
+#"21-23" 6,\
+#"24-26" 7,\
+#"27-30" 8,\
+#"31-33" 9,\
+#"34-37" 10,\
+#"38-40" 11,\
+#"" 12) 
+
+
+#set xtics rotate by 45 offset -2,-1 (\
+#"" -1,\
+#"1.01-1.05" 0,\
+#"1.06-1.10" 1,\
+#"1.11-1.15" 2,\
+#"1.16-1.20" 3,\
+#"1.21-1.25" 4,\
+#"1.26-1.30" 5,\
+#"1.31-1.35" 6,\
+#"1.36-1.40" 7,\
+#"1.41-1.45" 8,\
+#"1.46-1.50" 9,\
+#"1.51-1.55" 10,\
+#"1.56-1.60" 11,\
+#"1.61-1.65" 12,\
+#"1.66-1.70" 13,\
+#"1.71-1.75" 14,\
+#"1.76-1.80" 15,\
+#"1.81-1.85" 16,\
+#"1.86-1.90" 17,\
+#"1.91-1.95" 18,\
+#"1.96-2.00" 19,\
+#"" 20) 
+
+
+#set cbrange [0:300]
+
+set cbrange  [range_low:range_high]
+
+
+#set palette maxcolors 9
+#set palette defined ( 0 '#000090',\
+#                      1 '#000fff',\
+#                      2 '#0090ff',\
+#                      3 '#0fffee',\
+#                      4 '#90ff70',\
+#                      5 '#ffee00',\
+#                      6 '#ff7000',\
+#                      7 '#ee0000',\
+#                      8 '#7f0000')
+#
+#set palette defined ( \
+#-1500 "dark-green", -1100 "green", \
+#-700 "yellow", -300 "dark-yellow", \
+#100 "red", 500 "dark-red" )
+
+
+plot source_dat using 1:2:3 with image, \
+     source_dat using 1:2:(strcol(3)) with labels
+#offset 0,1.5
+  
+
+#set hidden3d
+#set pm3d at b
+#a = 0
+#set hidden3d front
+#set xyplane at a
+#splot source_dat with pm3d at b, a with lines lt -100
+#
+##splot source_dat using 1:2:3 with lines
+#
+##set hidden3d
+##splot source_dat with lines

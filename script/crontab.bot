@@ -1,0 +1,2 @@
+* * * * * cd / && /bnlbot/bnlbot/botstart/bot-1-0/script/bash/keep_bots_alive.bash
+30 23 * * * cd / && /bnlbot/bnlbot/botstart/bot-1-0/script/bash/dump_db.bash

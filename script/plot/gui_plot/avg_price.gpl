@@ -1,0 +1,29 @@
+set datafile commentschars '#'
+set datafile separator '|'
+
+set terminal pngcairo size 1920,1080 background '#ffffff'
+#set terminal pngcairo size 1024,768 background '#ffffff'
+set output data_file . '.png'
+
+set grid
+set key top left
+
+set title "avg price for winning bets last " . days . " days \n" . user . " : " . ts
+
+set yrange [1.0:1.15]
+#set ytics 0.01
+
+set ylabel "Odds"
+
+set xdata time
+set timefmt  "%Y-%m-%d %H:%M:%S"
+set format x "%Y-%m-%d"
+
+set xtics rotate by 90 offset 0, -5
+set xlabel "date" offset 0,-4
+set bmargin 8
+
+     
+plot data_file . ".dat" using 1:2 with boxes axes x1y1 title 'avg price - y1', \
+     data_file . ".dat" using 1:2 with lines smooth bezier axes x1y1 title 'smooth bezier - y1'
+

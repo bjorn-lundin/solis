@@ -1,0 +1,29 @@
+set datafile commentschars '#'
+set datafile separator '|'
+
+set terminal pngcairo size 2048,1536 background '#ffffff'
+set output target_png
+
+set title markettype . ' - ' . runner . ' - ' . percent 
+
+
+set xrange [3.0:10.0]
+set xtics 0.2
+
+set xlabel "odds"
+set ylabel "hitrate %"
+
+commission1=0.065
+commission2=0.0
+
+pb(x) = 1/( (x-1)*(1-commission1) +1)
+pl(x) = (x-1)/(x-commission1)
+
+pbnc(x) = 1/( (x-1)*(1-commission2) +1)
+plnc(x) = (x-1)/(x-commission2)
+
+
+plot datafile using 2:5 with boxes, \
+     datafile using 2:4 with boxes, \
+     pb(x) with lines lt rgb "red", \
+     pl(x) with lines lt rgb "red"

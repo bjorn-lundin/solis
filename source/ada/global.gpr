@@ -1,0 +1,115 @@
+with "xmlada";
+with "aws";
+
+project Global is
+   for Languages use ("Ada");
+
+--   type XML_Sources_Type is ("LOCAL", "GNAT", "LIB");
+--   XML_Sources : XML_Sources_Type  := external ("BOT_XML_SOURCE");
+
+--   XML_Sources_Dir : XML_Sources_Type := XML_Sources;
+
+   SOLIS_ROOT := external ("SOLIS_ROOT", "SOLIS_not_set");
+   Solis_Target := SOLIS_ROOT & "/target/ada";
+   Solis_Source := SOLIS_ROOT & "/source/ada";
+
+   type OS_Architecture_Type is ("lnx_x64","drw_x64","lnx_x86","lnx_a32", "lnx_a64");
+   OS_Arch : OS_Architecture_Type := external ("OS_ARCHITECTURE");
+
+-- AdaBotRoot
+   AdaSolisRoot := ".";
+
+-- -gnatwalK -  w - Activate warnings (w)
+--              a - activate all warnings  (a)
+--              l - for missing elaboration pragmas too
+--              K - but no warnings like '...is not modified, could be declared constant'
+-- -gnatvoUN    v - verbose
+--              o - Activate runtime overflow checks
+--              U - Tag all error messages with the unique string "error:"
+-- -gnat05      No warnings when Ada05 featues are used                 9.6-10368
+-- -gnatwW - Do not warn if we assume a string to start at index 1
+
+
+
+   Platform_Independent_Compiler_Switches := ("-g",
+                                              "-gnat2022",
+                                              "-Os",      -- minimize size 
+                                              "-fstack-check",
+                                              "-gnata",
+                                              "-gnatoU", -- -v
+                                              "-gnatw.o",  -- Warnings about unreferenced out parameters
+                                              "-gnatwu",   -- Activate warnings on unused entities
+                                              "-gnatyO",   -- overriding proc must be marked 'overriding'
+                                              "-gnatwm",   -- Warnings about modified but unreferenced variables
+                                              "-gnatye",    -- require 'end procedurename'
+                                              "-gnatwlaKW",
+                                              "-gnatwJ"); --allow obsolete constructs (text_io instead of ada.text_io)
+
+       for Object_Dir use Solis_Target & "/objects";
+
+--   Xml_Source := (Bot_Source & "/ada/global/xmlada-2018-src");
+
+-- need to move since newer gnatcoll give float image as 1.009913954 instead of 1.01 - which BF refuses to use
+-- moved to bot_coll instead
+
+   Common_Source_Dirs := (Solis_Source & "/" & "global",
+                          Solis_Source & "/" & "global/process_io",
+                          Solis_Source & "/" & "global/gnatcoll",   -- see above
+   --                     Solis_Source & "/" &   "global/inotify",
+                          Solis_Source & "/" & "global/repotool",
+                          Solis_Source & "/" & "global/tables");
+
+--      case XML_Sources_Dir is
+--         when "LIB"  =>
+--            for Source_Dirs use Common_Source_Dirs;
+--         when "GNAT"  =>
+--            for Source_Dirs use Common_Source_Dirs;
+--         when "LOCAL" =>
+--            for Source_Dirs use Common_Source_Dirs & Xml_Source;
+--      end case;
+
+
+   for Source_Dirs use Common_Source_Dirs;
+
+
+
+   package Compiler is
+     for Default_Switches ("ada") use Platform_Independent_Compiler_Switches;
+   end Compiler;
+
+   package Binder is
+      for Default_Switches ("ada") use ("-Es");
+   end Binder;
+
+   OS_Dependents_Linker_Switches := ();
+
+
+   case OS_Arch is
+     when "lnx_x86" =>
+       OS_Dependents_Linker_Switches := ("-lpq");
+     when "lnx_x64" =>
+       OS_Dependents_Linker_Switches := ("-lpq");
+     when "lnx_a32" =>
+       OS_Dependents_Linker_Switches := ("-lpq");
+     when "lnx_a64" =>
+       OS_Dependents_Linker_Switches := ("-lpq");
+     when "drw_x64" =>
+       OS_Dependents_Linker_Switches := ("-L/opt/local/lib/postgresql11", "-lpq", "-Wl,-no_pie");
+   end case;
+
+   package Linker is
+     for Default_Switches ("ada") use OS_Dependents_Linker_Switches;
+   end Linker;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-k", "-s", "-j4", "-m"); -- use 4 cpus if avail , less recompile
+   end Builder;
+
+
+--   package Ide is
+--      for Compiler_Command ("ada") use "gnatmake";
+--      for Compiler_Command ("c") use "gcc";
+--   end Ide;
+
+
+end Global;

@@ -1,0 +1,41 @@
+set datafile commentschars '#'
+set datafile separator '|'
+
+set terminal pngcairo size 2600,1440 background '#ffffff'
+#set terminal pngcairo size 1024,768 background '#ffffff'
+set output target_png
+
+set grid
+set key top left
+
+set title "equity for top " . numbets . " from db " . db_name 
+
+#set yrange [-3000:4000]
+#set y2range [-3000:4000]
+#set ytics 500
+#set y2tics 500
+
+set ylabel "kr"
+set y2label "kr"
+
+set xdata time
+set timefmt  "%Y-%m-%d %H:%M:%S"
+set format x "%Y-%m-%d"
+
+set xtics 30*86400 rotate by 90 offset 0, -5
+set xlabel "Datum" offset 0,-4
+set bmargin 8
+
+plot for [file in files] file . '.dat' using 1:2 with lines title file
+     
+ 
+ 
+#plot  data_file1 . ".dat" using 1:2 with lines title data_file1, \
+#      data_file2 . ".dat" using 1:2 with lines title data_file2, \
+#      data_file3 . ".dat" using 1:2 with lines title data_file3, \
+#      data_file4 . ".dat" using 1:2 with lines title data_file4, \
+#      data_file5 . ".dat" using 1:2 with lines title data_file5, \
+#      data_file6 . ".dat" using 1:2 with lines title data_file6, \
+#      data_file7 . ".dat" using 1:2 with lines title data_file7, \
+#      data_file8 . ".dat" using 1:2 with lines title data_file8
+         

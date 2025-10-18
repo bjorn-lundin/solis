@@ -1,0 +1,31 @@
+set datafile commentschars '#'
+set datafile separator '|'
+
+set terminal pngcairo size 2000,768 background '#ffffff'
+#set terminal pngcairo size 1024,768 background '#ffffff'
+set output target_png
+
+set grid
+set key top left
+
+set title "equity for MATCH_ODDS " . datafile . " from db " . db_name 
+
+set yrange [0:1800]
+#set y2range [-3000:4000]
+set ytics 100
+#set y2tics 500
+
+set ylabel "kr"
+set y2label "kr"
+
+set xdata time
+set timefmt  "%Y-%m-%d %H:%M:%S"
+set format x "%Y-%m-%d"
+
+set xtics rotate by 45 offset 0, -5
+set xlabel "Datum" offset 0,-4
+set bmargin 8
+
+#plot for [file in files] file . '.dat' using 1:2 with lines title file
+ 
+plot  datafile . ".dat" using 4:5 with lines title datafile

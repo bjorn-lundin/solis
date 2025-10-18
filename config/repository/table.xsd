@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='iso-8859-15'?>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' 
+           xmlns:xcl='http://www.nonodev.com/bnlbot' 
+           elementFormDefault='qualified' 
+           attributeFormDefault='unqualified' 
+           targetNamespace='http://www.nonodev.com/bnlbot'>		   
+  <xs:annotation>
+    <xs:documentation xml:lang='en'>
+          XML schema describing reg-files.
+          Changes:
+          Date:         Author:  Changes:
+          11-Sep-2014   BNL      Original version     
+          #5088             
+    </xs:documentation>
+  </xs:annotation>
+
+<!--=========================================================================-->
+<!-- general declared types                                                  -->
+<!--=========================================================================-->
+  <xs:include schemaLocation='commontype.xsd'/> 
+
+<!--=========================================================================-->
+<!-- locally declared types                                                  -->
+<!--=========================================================================-->
+
+    <xs:simpleType name='indexTypeType'>
+        <xs:restriction base='xs:normalizedString'>
+            <xs:enumeration value='primary'/>
+            <xs:enumeration value='unique'/>
+            <xs:enumeration value='index'/>
+            <xs:enumeration value='functional'/>
+       </xs:restriction>
+    </xs:simpleType>
+
+
+  <xs:complexType name='indexType'>
+     <xs:attribute name='Columns'  type='xs:normalizedString' use='required'/>
+     <xs:attribute name='type'     type='xcl:indexTypeType'   use='required'/>
+  </xs:complexType>
+
+  
+  <xs:complexType name='columnType'>
+     <xs:attribute name='Name'        type='xcl:string40Type' use='required'/>
+     <xs:attribute name='Primary'     type='xs:int'           use='optional'/>
+     <xs:attribute name='Size'        type='xs:int'           use='optional'/>
+     <xs:attribute name='Type'        type='xs:int'           use='optional'/>
+     <xs:attribute name='Foreign'     type='xs:int'           use='optional'/>
+     <xs:attribute name='Indexed'     type='xs:int'           use='optional'/>
+     <xs:attribute name='Unique'      type='xs:int'           use='optional'/>
+     <xs:attribute name='AllowNull'   type='xs:int'           use='required'/>
+     <xs:attribute name='NA'          type='xs:int'           use='optional'/>
+     <xs:attribute name='Owned'       type='xs:int'           use='optional'/>
+     <xs:attribute name='Right'       type='xs:int'           use='optional'/>
+     <xs:attribute name='Setup'       type='xs:int'           use='optional'/>
+     <xs:attribute name='Description' type='xcl:string80Type' use='required'/>
+  </xs:complexType>
+
+  <xs:complexType name='snapshotSettingsType'>
+     <xs:attribute name='SnapshotBase' type='xs:int' use='required'/>
+     <xs:attribute name='TruncateBase' type='xs:int' use='required'/>
+     <xs:attribute name='SnapshotData' type='xs:int' use='required'/>
+     <xs:attribute name='TruncateData' type='xs:int' use='required'/>
+     <xs:attribute name='SnapshotEdu'  type='xs:int' use='required'/>
+     <xs:attribute name='TruncateEdu'  type='xs:int' use='required'/>
+     <xs:attribute name='SnapshotFull' type='xs:int' use='required'/>
+     <xs:attribute name='TruncateFull' type='xs:int' use='required'/>
+  </xs:complexType>
+
+
+<!--=========================================================================-->
+<!-- Main Structures                                                         -->
+<!--=========================================================================-->
+  <xs:complexType name='tableType'>
+    <xs:sequence>
+      <xs:element name='SnapshotSettings' type='xcl:snapshotSettingsType' minOccurs='0' maxOccurs='1'/>
+      <xs:element name='Column'           type='xcl:columnType'           minOccurs='1' maxOccurs='unbounded'/>
+      <xs:element name='Index'            type='xcl:indexType'            minOccurs='1' maxOccurs='unbounded'/>
+    </xs:sequence>
+    <xs:attribute name='Name'         type='xcl:string40Type' use='required'/>
+    <xs:attribute name='Desc'         type='xcl:string80Type' use='required'/>
+    <xs:attribute name='Tablespace'   type='xcl:nullableString40Type' use='optional'/>
+    <xs:attribute name='Wiz'          type='xs:int'           use='optional'/>
+    <xs:attribute name='LicId'        type='xs:int'           use='optional'/>
+    <xs:attribute name='LogMask'      type='xs:int'           use='optional'/>
+    <xs:attribute name='LogicId'      type='xs:int'           use='optional'/>
+    <xs:attribute name='SafeAdd'      type='xs:int'           use='optional'/>
+    <xs:attribute name='Loadable'     type='xs:int'           use='optional'/>
+    <xs:attribute name='StorageClass' type='xs:int'           use='optional'/>
+    <xs:attribute name='CleanSetup'   type='xs:int'           use='optional'/>
+    <xs:attribute name='CleanProd'    type='xs:int'           use='optional'/>
+  </xs:complexType>
+
+  <xs:complexType name='bnlBotType'>
+    <xs:sequence>
+      <xs:element name='Table' type='xcl:tableType' minOccurs='1' maxOccurs='1'/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <!--  The Definition  ! -->
+  <xs:element name='BnlBot' type='xcl:bnlBotType' />
+</xs:schema>

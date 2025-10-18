@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<BnlBot xmlns="http://www.nonodev.com/bnlbot" xmlns:xcl="http://www.nonodev.com/bnlbot" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Term Name="sampleid" Type="2" Size="9">
+    <Presentation Size="0" LongDesc=""/>
+    <TranslationList>
+      <Translation Language="swe" LongDesc="Sampleid" ShortDesc="Sampleid"/>
+      <Translation Language="eng" LongDesc="Sampleid" ShortDesc="Sampleid"/>
+    </TranslationList>                                                     
+  </Term>
+</BnlBot>

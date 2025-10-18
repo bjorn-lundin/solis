@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<MaAstro>
+  <Label Name="delload_title" Type="-1" Size="-1">
+    <TranslationList>
+      <Translation Language="swe" LongDesc="Radera Last" ShortDesc="Radera Last"/>
+      <Translation Language="eng" LongDesc="Delete Load" ShortDesc="Delete Load"/>
+    </TranslationList>
+  </Label>
+</MaAstro>

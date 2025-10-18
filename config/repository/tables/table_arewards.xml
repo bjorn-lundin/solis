@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<BnlBot xmlns="http://www.nonodev.com/bnlbot" xmlns:xcl="http://www.nonodev.com/bnlbot" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Table Desc="rewards betting 100 at this time" Name="AREWARDS" Tablespace="" >
+        <Column Name="marketid"     AllowNull="0"  Description="market id"/>
+        <Column Name="selectionid"  AllowNull="0"  Description="selection_id"/>
+        <Column Name="pricets"      AllowNull="0" Description="timestamp of prices"/>
+        <Column Name="side"       AllowNull="0" Description="side"/>
+        <Column Name="profit" AllowNull="0" Description="the reward"/>
+        <Column Name="ixxlupd"      AllowNull="0" Description="Latest updater"/>
+        <Column Name="ixxluts"      AllowNull="0" Description="Latest update timestamp"/>
+        <Index Columns="marketid,selectionid,pricets,side" type="primary"/>
+    </Table>
+</BnlBot>

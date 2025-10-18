@@ -1,0 +1,51 @@
+with "global";
+project solis is
+
+   Sub_System := "solis";
+
+   AL    := Global.Solis_Source & "/local";
+--   BAWS    := Global.AdasolisRoot & "/solis_ws";
+
+   for Exec_Dir use Global.solis_Target & "/bin"  ;
+
+   for Source_Dirs use (--AL & "/" & Sub_System,
+                        AL & "/" & "objects",
+                        AL & "/" & "utils",
+                        AL & "/inotify",
+                        AL & "/inotify/examples");
+
+   for Object_Dir use Global'Object_Dir & "/" & Sub_System;
+
+
+   System_Mains := ("repo.adb",
+                    "json_extracter.adb"
+                    );
+
+--   Stat_Mains   := ();
+
+--   Display_Mains :=  ("race_time.adb");
+
+--   Test_Programs := (); --("test_string_object.adb");
+
+   for Main use System_Mains;
+   
+   
+   
+--   case solis_Machine_Role is
+--      when "PROD"       =>  for Main use System_Mains;
+--      when "TEST"       =>  for Main use System_Mains;
+--      when "SIM"        =>  for Main use System_Mains &
+--                                         Stat_Mains &
+--                                         Other_Mains &
+--                                         Test_Programs;
+--      when "DISPLAY"    =>  for Main use Display_Mains;
+--      when "LONGPOLL"   =>  for Main use System_Mains;
+--    end case;
+
+   package Compiler renames Global.Compiler;
+   package Binder   renames Global.Binder;
+   package Linker   renames Global.Linker;
+--   package Ide      renames Global.Ide;
+
+
+end solis;

@@ -1,0 +1,23 @@
+set datafile commentschars '#'
+set datafile separator '|'
+set terminal pngcairo size 2000,768 background '#ffffff'
+set output '111529496.png'
+set grid
+set key top left
+set title "price changes for eventid 111529496 "
+set yrange [0:40]
+set xrange [-20000:0]
+set ylabel "price"
+plot \
+"111529496_5278211.dat" u 1:4 w lines, \
+"111529496_5577310.dat" u 1:4 w lines, \
+"111529496_6175718.dat" u 1:4 w lines, \
+"111529496_6835804.dat" u 1:4 w lines, \
+"111529496_6879855.dat" u 1:4 w lines, \
+"111529496_6949187.dat" u 1:4 w lines, \
+"111529496_7220324.dat" u 1:4 w lines, \
+"111529496_7378243.dat" u 1:4 w lines, \
+"111529496_7705516.dat" u 1:4 w lines, \
+"111529496_7835157.dat" u 1:4 w lines, \
+"111529496_7835158.dat" u 1:4 w lines, \
+"111529496_7835159.dat" u 1:4 w lines

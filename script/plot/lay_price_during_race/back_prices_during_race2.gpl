@@ -1,0 +1,41 @@
+set datafile commentschars '#'
+set datafile separator '|'
+
+set terminal pngcairo size 2000,1500 background '#ffffff'
+#set terminal pngcairo size 2000,768 background '#ffffff'
+#set terminal pngcairo size 1024,768 background '#ffffff'
+set output target_png
+
+set grid
+set key top left
+
+set title "BACK prices for market " . marketid . " during race with runners from db " . db_name 
+
+set yrange  [0:25]
+set y2range [0:25]
+#set y2range [-3000:4000]
+set ytics 1
+set y2tics 1
+
+set ylabel "odds"
+set y2label "odds"
+
+set xdata time
+set timefmt  "%Y-%m-%d %H:%M:%S"
+set format x "%H:%M:%S"
+
+set xtics rotate by 45 offset 0, -5
+set xlabel "Datum" offset 0,-4
+set bmargin 8
+
+#plot for [r in runners] r using 1:4 with lines title r
+
+set boxwidth 0.2
+set style fill solid
+
+plot for [w in winners]        w using 1:4 with lines linetype 4 linecolor rgb 'green' title "Winner", \
+     for [p in placed]         p using 1:4 with lines linetype 4 linecolor rgb 'blue' title "Placed", \
+     for [l in losers]         l using 1:4 with lines linetype 1 linecolor rgb 'red' title "Loser", \
+     for [bw in bets_won]     bw using 1:3 with boxes linecolor            rgb 'green' title "Bet won", \
+     for [bl in bets_lost]    bl using 1:3 with boxes linecolor            rgb 'red' title "Bet lost", \
+     for [bn in bets_nomatch] bn using 1:3 with boxes linecolor            rgb 'orange' title "Bet nomatch"

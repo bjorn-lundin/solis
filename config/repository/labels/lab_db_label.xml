@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<MaAstro>
+  <Label Name="db_label" Type="-1" Size="-1">
+    <TranslationList>
+      <Translation Language="den" LongDesc="Database" ShortDesc="Database"/>
+      <Translation Language="nld" LongDesc="Database" ShortDesc="Database"/>
+      <Translation Language="swe" LongDesc="Databas" ShortDesc="Database"/>
+      <Translation Language="eng" LongDesc="Database" ShortDesc="Database"/>
+    </TranslationList>
+  </Label>
+</MaAstro>

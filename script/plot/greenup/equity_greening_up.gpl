@@ -1,0 +1,33 @@
+set datafile commentschars '#'
+set datafile separator '|'
+
+set terminal pngcairo size 2000,768 background '#ffffff'
+#set terminal pngcairo size 1366,768 background '#ffffff'
+set output target_png
+
+set grid
+set key top left
+
+set title "equity for " . bet_type . " " . db_name . " 
+
+#set yrange [-3000:4000]
+#set y2range [-3000:4000]
+#set ytics 500
+#set y2tics 500
+
+set ylabel "kr"
+set y2label "kr"
+
+set xdata time
+set timefmt  "%Y-%m-%d %H:%M:%S"
+set format x "%Y-%m-%d"
+
+set xtics rotate by 45 offset 0, -5
+set xlabel "Datum" offset 0,-4
+
+
+set bmargin 8
+
+plot data_file u 1:4 w lines lc rgb "green" title 'Saldo'
+
+         

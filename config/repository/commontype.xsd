@@ -1,0 +1,156 @@
+<?xml version='1.0' encoding='iso-8859-15'?>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' 
+           xmlns='http://www.nonodev.com/bnlbot'  
+           targetNamespace='http://www.nonodev.com/bnlbot'  
+           elementFormDefault='qualified' 
+           attributeFormDefault='unqualified'>
+
+	<xs:annotation>
+    	<xs:documentation xml:lang='en'>
+	      XML schema describing the common types.
+    	</xs:documentation>
+	</xs:annotation>
+
+	<xs:simpleType name='nullableString15Type'>
+   		<xs:restriction base='xs:normalizedString'>
+  			<xs:minLength value='0'/> 
+   			<xs:maxLength value='15'/> 
+   		</xs:restriction>
+ 	</xs:simpleType>
+
+	<xs:simpleType name='nullableString12Type'>
+	   	<xs:restriction base='xs:normalizedString'>
+  			<xs:minLength value='0'/> 
+   			<xs:maxLength value='12'/> 
+   		</xs:restriction>
+ 	</xs:simpleType>
+
+	<xs:simpleType name='nullableString30Type'>
+	   	<xs:restriction base='xs:normalizedString'>
+  			<xs:minLength value='0'/> 
+   			<xs:maxLength value='30'/> 
+   		</xs:restriction>
+ 	</xs:simpleType>
+
+	<xs:simpleType name='string2Type'>
+	   	<xs:restriction base='xs:normalizedString'>
+  			<xs:minLength value='1'/> 
+   			<xs:maxLength value='2'/> 
+   		</xs:restriction>
+ 	</xs:simpleType>
+    
+	<xs:simpleType name='string12Type'>
+	   	<xs:restriction base='xs:normalizedString'>
+  			<xs:minLength value='1'/> 
+   			<xs:maxLength value='12'/> 
+   		</xs:restriction>
+ 	</xs:simpleType>
+
+	<xs:simpleType name='string15Type'>
+	   	<xs:restriction base='xs:normalizedString'>
+  			<xs:minLength value='1'/> 
+   			<xs:maxLength value='15'/> 
+   		</xs:restriction>
+ 	</xs:simpleType>
+    
+	<xs:simpleType name='string20Type'>
+	   	<xs:restriction base='xs:normalizedString'>
+  			<xs:minLength value='1'/> 
+   			<xs:maxLength value='20'/> 
+   		</xs:restriction>
+ 	</xs:simpleType>
+
+	<xs:simpleType name='string40Type'>
+	   	<xs:restriction base='xs:normalizedString'>
+  			<xs:minLength value='1'/> 
+   			<xs:maxLength value='40'/> 
+   		</xs:restriction>
+ 	</xs:simpleType>
+
+	<xs:simpleType name='string60Type'>
+	   	<xs:restriction base='xs:normalizedString'>
+  			<xs:minLength value='1'/> 
+   			<xs:maxLength value='60'/> 
+   		</xs:restriction>
+ 	</xs:simpleType>
+
+	<xs:simpleType name='string80Type'>
+	   	<xs:restriction base='xs:normalizedString'>
+  			<xs:minLength value='1'/> 
+   			<xs:maxLength value='80'/> 
+   		</xs:restriction>
+ 	</xs:simpleType>
+
+	<xs:simpleType name='nullableString80Type'>
+	   	<xs:restriction base='xs:normalizedString'>
+  			<xs:minLength value='0'/> 
+   			<xs:maxLength value='80'/> 
+   		</xs:restriction>
+ 	</xs:simpleType>
+
+	<xs:simpleType name='nullableString40Type'>
+	   	<xs:restriction base='xs:normalizedString'>
+  			<xs:minLength value='0'/> 
+   			<xs:maxLength value='40'/> 
+   		</xs:restriction>
+ 	</xs:simpleType>
+
+
+    <xs:simpleType name='string140Type'>
+            <xs:restriction base='xs:string'>
+                    <xs:minLength value='1'/>
+                    <xs:maxLength value='140'/>
+            </xs:restriction>
+    </xs:simpleType>
+
+	<xs:simpleType name='processNameType'>
+  		<xs:restriction base='xs:normalizedString'>
+   			<xs:minLength value='1'/> 
+   			<xs:maxLength value='15'/> 
+   		</xs:restriction>
+ 	</xs:simpleType>
+
+	<xs:simpleType name='processNodeType'>
+   		<xs:restriction base='xs:normalizedString'>
+   			<xs:minLength value='1'/> 
+   			<xs:maxLength value='15'/> 
+   		</xs:restriction>
+ 	</xs:simpleType>
+  
+	<xs:simpleType name='natural'>
+	   	<xs:restriction base='xs:unsignedInt'>
+   			<xs:minInclusive value='0'/> 
+  			<xs:maxInclusive value='2147483647'/> 
+   		</xs:restriction>
+ 	</xs:simpleType>
+    
+    <xs:simpleType name='weekdayType'>
+      <xs:restriction base='xs:normalizedString'>
+        <xs:enumeration value='Monday'/> 
+        <xs:enumeration value='Tuesday'/> 
+        <xs:enumeration value='Wednesday'/> 
+        <xs:enumeration value='Thursday'/> 
+        <xs:enumeration value='Friday'/> 
+        <xs:enumeration value='Saturday'/> 
+        <xs:enumeration value='Sunday'/> 
+     </xs:restriction>
+    </xs:simpleType>
+ 
+	<xs:simpleType name='nonNegativeDecimalType'>
+	   	<xs:restriction base='xs:decimal'>
+            <xs:minInclusive value='0.0'/> 
+   		</xs:restriction>
+ 	</xs:simpleType>
+
+  <xs:simpleType name='userLanguageType'>
+      <xs:restriction base='xs:normalizedString'>
+          <xs:enumeration value='swe'/>
+          <xs:enumeration value='eng'/>
+      </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name='systemLanguageType'>
+      <xs:restriction base='userLanguageType'/>
+  </xs:simpleType>
+  
+</xs:schema>

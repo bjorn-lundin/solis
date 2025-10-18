@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<BnlBot xmlns="http://www.nonodev.com/bnlbot" xmlns:xcl="http://www.nonodev.com/bnlbot" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Table Desc="logged readings" Name="FREADINGS" Tablespace="" >
+        <Column Name="macaddress"  AllowNull="0" Description="mac id"/>
+        <Column Name="created"     AllowNull="0" Description="name of pot"/>
+        <Column Name="reading"     AllowNull="0" Description="raw sensor value"/>
+        <Column Name="ixxlupd"     AllowNull="0" Description="Latest updater"/>
+        <Column Name="ixxluts"     AllowNull="0" Description="Latest update timestamp"/>
+        <Index Columns="macaddress,created" type="primary"/>
+    </Table>
+</BnlBot>

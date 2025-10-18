@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='iso-8859-15'?>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' 
+           xmlns:xcl='http://www.nonodev.com/bnlbot' 
+           elementFormDefault='qualified' 
+           attributeFormDefault='unqualified' 
+           targetNamespace='http://www.nonodev.com/bnlbot'>           
+  <xs:annotation>
+    <xs:documentation xml:lang='en'>
+          XML schema describing trm-files.
+          Changes:
+          Date:         Author:  Changes:
+          14-Oct-2011   BNL      Original version       
+    </xs:documentation>
+  </xs:annotation>
+
+<!--=========================================================================-->
+<!-- general declared types                                                  -->
+<!--=========================================================================-->
+  <xs:include schemaLocation='commontype.xsd'/> 
+
+<!--=========================================================================-->
+<!-- locally declared types                                                  -->
+<!--=========================================================================-->
+
+  <xs:simpleType name='minusOneType'>    
+    <xs:restriction base='xs:int'>
+        <xs:minInclusive value='-1'/> 
+        <xs:maxInclusive value='-1'/> 
+    </xs:restriction>
+  </xs:simpleType>
+
+  
+  <xs:complexType name='translationType'>
+    <xs:attribute name='Language'  type='xcl:userLanguageType' use='required'/>
+    <xs:attribute name='LongDesc'  type='xcl:string140Type'    use='required'/>
+    <xs:attribute name='ShortDesc' type='xcl:string140Type'    use='required'/>
+  </xs:complexType>
+  
+    
+  <xs:complexType name='translationListType'>
+    <xs:sequence>
+      <xs:element name='Translation' type='xcl:translationType'  minOccurs='1' maxOccurs='unbounded'/>
+    </xs:sequence>
+  </xs:complexType>
+
+<!--=========================================================================-->
+<!-- Main Structures                                                         -->
+<!--=========================================================================-->
+
+  <xs:complexType name='labelType'>
+    <xs:sequence>
+      <xs:element name='TranslationList' type='xcl:translationListType' minOccurs='1' maxOccurs='1'/>
+    </xs:sequence>
+    <xs:attribute name='Name' type='xcl:string40Type' use='required'/>
+    <xs:attribute name='Type' type='xcl:minusOneType'  use='required'/>
+    <xs:attribute name='Size' type='xcl:minusOneType'  use='required'/>
+  </xs:complexType>
+
+  <xs:complexType name='bnlBotType'>
+    <xs:sequence>
+      <xs:element name='Label' type='xcl:labelType' minOccurs='1' maxOccurs='1'/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <!--  The Definition  ! -->
+  <xs:element name='BnlBot' type='xcl:bnlBotType' />
+</xs:schema>

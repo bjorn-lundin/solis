@@ -1,0 +1,23 @@
+set datafile commentschars '#'
+set datafile separator '|'
+set terminal pngcairo size 2000,768 background '#ffffff'
+set output target_png
+set pm3d map
+set pm3d corners2color c1
+
+set xlabel "max 'MATCH_ODDS' odds"
+set ylabel "max 'Any Unqouted' odds"
+#set pm3d interpolate 0,0
+
+set xrange [2.0:7.9]
+set xtics 2.2,0.2,7.8
+set yrange [4:35]
+set ytics 6,2,34
+set title bet_type
+
+#
+splot data_file using 1:2:3
+# w pm3d 
+
+
+

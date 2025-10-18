@@ -25,7 +25,7 @@ procedure Json_Extracter is
     begin
       text_io.put_line(w);
     end Log;
-      
+
 
 
     -----------------------------------------------------
@@ -44,15 +44,13 @@ procedure Json_Extracter is
 --    {"time":"2025-10-12T23:00:00Z","intervalParametersStartTime":"2025-10-12T22:00:00Z","data":{"air_temperature":3.4,"wind_speed":2.1,"cloud_area_fraction":0}},
 --    {"time":"2025-10-13T00:00:00Z","intervalParametersStartTime":"2025-10-12T23:00:00Z","data":{"air_temperature":2.3,"wind_speed":1.6,"cloud_area_fraction":0}}
 --    ]}
-    
-    
-    
+
     procedure on_SMHI_Data(Data : String ) is
-    
+
       J : Json_Value := Create;
       tm: Json_Value := Create_Object;
       items : Json_Array := Empty_Array;
-    
+
     begin
        J := Read (Strm => Data, Filename => "");
        if J.Has_Field("timeSeries") then
@@ -67,8 +65,8 @@ procedure Json_Extracter is
                Log(sTm);
              end;
            end if;
-         end loop;   
-       end if;       
+         end loop;
+       end if;
     end on_SMHI_Data;
     -----------------------------------------------------
     procedure On_Elpriser_Data(filename : string ) is
@@ -101,7 +99,7 @@ procedure Json_Extracter is
     use Ada.Directories;
     Dir_Ent : Directory_Entry_Type;
     Search  : Search_Type;
-    
+
 begin
 
 -- find data - *.json
@@ -118,7 +116,7 @@ begin
                        Directory_Entry => Dir_Ent);
 --        Text_io.put_line(Full_Name(Dir_Ent));
         Text_io.put_line(Simple_Name (Dir_Ent));
-        
+
 --        Text_io.put_line(Kind(full_Name (Dir_Ent))'img);
 --        File_List.Append(Fname);
 
@@ -126,17 +124,19 @@ begin
           s_name : string := Simple_Name (Dir_Ent);
         begin
           if s_name(1..5) = "solis" then
-            
             On_Solis_Data(File_Content(Full_Name(Dir_Ent)));
+
           elsif s_name(1..4) = "smhi" then
             On_SMHI_Data(File_Content(Full_Name(Dir_Ent)));
+
           elsif s_name(1..8) = "elpriser" then
             On_Elpriser_Data(File_Content(Full_Name(Dir_Ent)));
+
           else
             Text_io.put_line("unhandled file " & Full_Name(Dir_Ent));
           end if;
         end;
-        
+
 
 
     end loop;

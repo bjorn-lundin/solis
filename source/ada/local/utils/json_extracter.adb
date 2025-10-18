@@ -4,6 +4,8 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Strings.Unbounded.Text_Io;
 with Ada.Environment_Variables;
 with Ada.Directories;
+with ada.exceptions; use ada.exceptions;
+
 --with bot_types; use bot_types;
 with Text_io;
 with botcoll.json; use botcoll.json;
@@ -122,19 +124,27 @@ begin
 
         declare
           s_name : string := Simple_Name (Dir_Ent);
+          content : String := File_Content(Full_Name(Dir_Ent));
         begin
           if s_name(1..5) = "solis" then
-            On_Solis_Data(File_Content(Full_Name(Dir_Ent)));
+            On_Solis_Data(content);
 
           elsif s_name(1..4) = "smhi" then
-            On_SMHI_Data(File_Content(Full_Name(Dir_Ent)));
+            On_SMHI_Data(content);
 
           elsif s_name(1..8) = "elpriser" then
-            On_Elpriser_Data(File_Content(Full_Name(Dir_Ent)));
+            On_Elpriser_Data(content);
 
           else
             Text_io.put_line("unhandled file " & Full_Name(Dir_Ent));
           end if;
+        exception
+          when E: others =>
+            Text_io.put_line("Error processing file " & Full_Name(Dir_Ent));
+            Text_io.put_line("content was " & content);
+            Text_io.put_line("Error message was " & Exception_Message(E));
+            raise;
+
         end;
 
 

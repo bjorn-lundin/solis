@@ -4,12 +4,10 @@ project solis is
    Sub_System := "solis";
 
    AL    := Global.Solis_Source & "/local";
---   BAWS    := Global.AdasolisRoot & "/solis_ws";
 
    for Exec_Dir use Global.solis_Target & "/bin"  ;
 
    for Source_Dirs use (--AL & "/" & Sub_System,
-                        AL & "/" & "objects",
                         AL & "/" & "utils",
                         AL & "/inotify",
                         AL & "/inotify/examples");
@@ -46,6 +44,6 @@ project solis is
    package Binder   renames Global.Binder;
    package Linker   renames Global.Linker;
 --   package Ide      renames Global.Ide;
-
+   package Pretty_Printer renames Global.Pretty_Printer;
 
 end solis;

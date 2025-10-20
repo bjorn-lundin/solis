@@ -44,12 +44,8 @@ procedure Json_Extracter is
    --    ]}
 
    procedure on_SMHI_Data (Data : String) is
-
       J                 : Json_Value := Create;
-      tm                : Json_Value := Create_Object;
-      items             : Json_Array := Empty_Array;
       time_Series_Array : Json_Array := Empty_Array;
-      data_items        : Json_Array := Empty_Array;
       data_item         : Json_Value := Create_Object;
 
    begin
@@ -58,24 +54,32 @@ procedure Json_Extracter is
          time_Series_Array := j.Get ("timeSeries");
          for I in 1 .. Length (time_Series_Array) loop
             Log ("we have result #:" & I'Img);
-            tm := Get (time_Series_Array, I);
+            data_item := Get (time_Series_Array, I);
 
-            if tm.Has_Field ("time") then
+            if data_item.Has_Field ("time") then
                declare
-                  stm : string := tm.Get ("time");
+                  tm : string := data_item.Get ("time");
                begin
-                  Log (sTm);
+                  Log ("time " & Tm);
                end;
             end if;
 
-            if tm.Has_Field ("data") then
-               data_item := tm.Get ("data");
+            if data_item.Has_Field ("intervalParametersStartTime") then
+               declare
+                  ipst : string := data_item.Get ("intervalParametersStartTime");
+               begin
+                  Log ("intervalParametersStartTime " & ipst);
+               end;
+            end if;
+
+            if data_item.Has_Field ("data") then
+               data_item := data_item.Get ("data");
                if data_item.Has_Field ("air_temperature") then
                   declare
                      air_temperature : float :=
                        data_item.Get ("air_temperature");
                   begin
-                     Log ("  air_temperature: " & air_temperature'image);
+                     Log ("air_temperature: " & air_temperature'image);
                   end;
                end if;
 
@@ -83,7 +87,7 @@ procedure Json_Extracter is
                   declare
                      wind_speed : float := data_item.Get ("wind_speed");
                   begin
-                     Log ("  wind_speed: " & wind_speed'image);
+                     Log ("wind_speed: " & wind_speed'image);
                   end;
                end if;
 
@@ -92,8 +96,7 @@ procedure Json_Extracter is
                      cloud_area_fraction : Long_Long_Integer :=
                        data_item.Get ("cloud_area_fraction");
                   begin
-                     Log
-                       ("  cloud_area_fraction: " & cloud_area_fraction'image);
+                     Log("cloud_area_fraction: " & cloud_area_fraction'image);
                   end;
                end if;
 
@@ -102,9 +105,50 @@ procedure Json_Extracter is
       end if;
    end on_SMHI_Data;
    -----------------------------------------------------
-   procedure On_Elpriser_Data (filename : string) is
+   procedure On_Elpriser_Data (Data : String) is
+      J                 : Json_Value := Create;
+      data_items        : Json_Array := Empty_Array;
+      data_item         : Json_Value := Create_Object;
+--[
+--{"SEK_per_kWh":0.05878,"EUR_per_kWh":0.00532,"EXR":11.04933,"time_start":"2025-10-12T00:00:00+02:00","time_end":"2025-10-12T00:15:00+02:00"},
+--{"SEK_per_kWh":0.04751,"EUR_per_kWh":0.0043,"EXR":11.04933,"time_start":"2025-10-12T00:15:00+02:00","time_end":"2025-10-12T00:30:00+02:00"},      
+-- ..
+--]
+
    begin
-      null;
+      J := Read (Strm => Data, Filename => "");
+      data_items := Get (J); --convert to array
+
+      for I in 1 .. Length (data_items) loop
+         data_item := Get (data_items, I);
+         if data_item.Has_Field ("SEK_per_kWh") then
+            declare
+               sek : float:= data_item.Get ("SEK_per_kWh");
+            begin
+               Log ("SEK_per_kWh "& sek'img);
+            end;
+         end if;
+         
+         if data_item.Has_Field ("time_start") then
+            declare
+               ts : string:= data_item.Get ("time_start");
+            begin
+               Log ("time_start" & ts);
+            end;
+         end if;
+
+         if data_item.Has_Field ("time_end") then
+            declare
+               te : string:= data_item.Get ("time_end");
+            begin
+               Log ("time_end " & te);
+            end;
+         end if;
+
+      end loop;
+
+--      end if;
+
    end On_Elpriser_Data;
 
    ------------------------------------------------------------
@@ -136,7 +180,7 @@ begin
    Start_Search
      (Search    => Search,
       Directory => "/home/bnl/solis/data",
-      Pattern   => "smhi*.json");
+      Pattern   => "*.json");
    loop
       exit when not More_Entries (Search => Search);
       Get_Next_Entry (Search => Search, Directory_Entry => Dir_Ent);
@@ -151,8 +195,8 @@ begin
          content : String := File_Content (Full_Name (Dir_Ent));
       begin
          if s_name (1 .. 5) = "solis" then
-            On_Solis_Data (content);
-
+     --      On_Solis_Data (content);
+null;
          elsif s_name (1 .. 4) = "smhi" then
             On_SMHI_Data (content);
 

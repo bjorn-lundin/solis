@@ -126,7 +126,7 @@ package body Repository.Table is
       Filename : String := Utils.Lower_Case(
                                Config.Item(Clreqs).Directory.Fix_String & "/"  &
                                Config.Item(Clreqs).Prefix.Fix_String & "_" & Self.Name.Fix_String & ".xml");
-      Xsdname  : String := Ada.Environment_Variables.Value(Name => "BOT_CONFIG") & "/repository/table.xsd";
+      Xsdname  : String := Ada.Environment_Variables.Value(Name => "SOLIS_CONFIG") & "/repository/table.xsd";
       Is_Valid : Boolean := False;
     begin
       -- check doc is valid
@@ -170,7 +170,7 @@ package body Repository.Table is
       Filename : String := Utils.Lower_Case(
                                Config.Item(Tables).Directory.Fix_String & "/"  &
                                Config.Item(Tables).Prefix.Fix_String & "_" & Self.Name.Fix_String & ".xml");
-      Xsdname  : String := Ada.Environment_Variables.Value(Name => "BOT_CONFIG") & "/repository/table.xsd";
+      Xsdname  : String := Ada.Environment_Variables.Value(Name => "SOLIS_CONFIG") & "/repository/table.xsd";
       Is_Valid : Boolean := False;
     begin
       -- check doc is valid

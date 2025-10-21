@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 --	COPYRIGHT	Consafe Logistics AB, Lund
 --	FILE NAME	process_io.adb
---	RESPONSIBLE	Björn Lundin
+--	RESPONSIBLE	Bjï¿½rn Lundin
 --	DESCRIPTION	This files contains the package body
 --			of the package PROCESS_IO.
 --------------------------------------------------------------------------------
@@ -164,14 +164,14 @@ package body Process_Io is
     Process : Process_Type;
     use Ada.Environment_Variables;
   begin
-    if Exists("BOT_NAME") then
-      Move(Ada.Characters.Handling.To_Lower(Value("BOT_NAME")),Process.Name,Drop => Right);
+    if Exists("SOLIS_NAME") then
+      Move(Ada.Characters.Handling.To_Lower(Value("SOLIS_NAME")),Process.Name,Drop => Right);
     else
       Move(Trim(Posix.Pid_T'Image(Posix.Getpid),Both),Process.Name,Drop => Right);
     end if;
 
-    if Exists("BOT_NODE") then
-      Move(Ada.Characters.Handling.To_Lower(Value("BOT_NODE")),Process.Node,Drop => Right);
+    if Exists("SOLIS_NODE") then
+      Move(Ada.Characters.Handling.To_Lower(Value("SOLIS_NODE")),Process.Node,Drop => Right);
     end if;
     return Process;
   end Get_Process;

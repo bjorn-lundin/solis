@@ -129,7 +129,7 @@ package body Repository.View is
       Filename : String := Utils.Lower_Case(
                                Config.Item(Views).Directory.Fix_String & "/"  &
                                Config.Item(Views).Prefix.Fix_String & "_" & Self.Name.Fix_String & ".xml");
-      Xsdname  : String := Ada.Environment_Variables.Value(Name => "BOT_CONFIG") & "/repository/view.xsd";
+      Xsdname  : String := Ada.Environment_Variables.Value(Name => "SOLIS_CONFIG") & "/repository/view.xsd";
       Is_Valid : Boolean := False;
     begin
       -- check doc is valid

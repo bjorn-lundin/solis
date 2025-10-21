@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 --    COPYRIGHT    Consafe Logistics AB, Lund
---    RESPONSIBLE    Björn Lundin
+--    RESPONSIBLE    Bjï¿½rn Lundin
 --    DESCRIPTION    This files contains the pipe object
 --------------------------------------------------------------------------------
 with Ada.Strings;        use Ada.Strings;
@@ -49,7 +49,7 @@ package body Process_Io.Pipe is
 --    end Sigpipe_Handler;
 --  end SignalHandler;
 
-  Global_Pipe_Directory : String := EV.Value("BOT_HOME") & "/pipes/";
+  Global_Pipe_Directory : String := EV.Value("SOLIS_HOME") & "/pipes/";
 
   type Mode_T is new Integer;
   type Size_T is new Long_Integer;

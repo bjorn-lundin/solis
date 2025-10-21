@@ -85,9 +85,9 @@ package body Repository is
     Input        : File_Input;
     package EV renames Ada.Environment_Variables;
   begin
-    if EV.Exists(Name => "BOT_CONFIG") then
+    if EV.Exists(Name => "SOLIS_CONFIG") then
       declare
-        Filename : String := EV.Value(Name => "BOT_CONFIG") & "/repository/betbot.xml";
+        Filename : String := EV.Value(Name => "SOLIS_CONFIG") & "/repository/solis.xml";
       begin
         --open sattmate.xml
         Open(Filename, Input);
@@ -96,7 +96,7 @@ package body Repository is
         Close(Input);
       end;
     else
-      raise Configuration_Error with "BOT_CONFIG is NOT defined!";
+      raise Configuration_Error with "SOLIS_CONFIG is NOT defined!";
     end if;
     Self := My_Reader.Config;
     Self.Is_Initialized := True;

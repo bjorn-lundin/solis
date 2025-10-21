@@ -106,7 +106,7 @@ package body Repository.Column is
       Filename : String := Utils.Lower_Case(
                                Config.Item(Terms).Directory.Fix_String & "/"  &
                                Config.Item(Terms).Prefix.Fix_String & "_" & Self.Name.Fix_String & ".xml");
-      Xsdname  : String := Ada.Environment_Variables.Value(Name => "BOT_CONFIG") & "/repository/trm.xsd";
+      Xsdname  : String := Ada.Environment_Variables.Value(Name => "SOLIS_CONFIG") & "/repository/trm.xsd";
       Is_Valid : Boolean := False;
     begin
       -- check doc is valid

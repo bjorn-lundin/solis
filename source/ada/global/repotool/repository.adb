@@ -184,7 +184,7 @@ package body Repository is
                                    Qname         : Unicode.Ces.Byte_Sequence := "") is
     pragma Unreferenced(Namespace_Uri);
     pragma Unreferenced(Qname);
-    pragma Unreferenced(Handler);
+--    pragma Unreferenced(Handler);
     The_Tag : constant String := Local_Name;
   begin
     if The_Tag = Tag_Tables then
@@ -768,7 +768,8 @@ package body Repository is
                   end loop;
                   Tbl.Reset;
                 end;
-                Put_Line("                   $(REPO_ENGINE)");
+                Put_Line("");
+           --     Put_Line("                   $(REPO_ENGINE)");
                 Put_Line(Receipt_Prefix & " $(REPO_ENGINE) --"& Database.Lower_Case& "=" & File_Name & " > " & File_Name & ".sql");
                 Put_Line(Receipt_Prefix & " $(REPO_ENGINE) --table=" & File_Name & " > table_" & File_Name & ".ada");
               when Ud4 =>

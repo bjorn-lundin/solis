@@ -28,7 +28,7 @@ table_airreadings.adb : $(REPO_TABLES_PATH)/table_airreadings.xml \
                    $(REPO_TERMS_PATH)/trm_altitude.xml \
                    $(REPO_TERMS_PATH)/trm_ixxlupd.xml \
                    $(REPO_TERMS_PATH)/trm_ixxluts.xml \
-                   $(REPO_ENGINE)
+
 	 $(REPO_ENGINE) --postgresql=airreadings > airreadings.sql
 	 $(REPO_ENGINE) --table=airreadings > table_airreadings.ada
 	 gnatchop -gnat12 -w table_airreadings.ada
@@ -44,7 +44,7 @@ table_arewards.adb : $(REPO_TABLES_PATH)/table_arewards.xml \
                    $(REPO_TERMS_PATH)/trm_profit.xml \
                    $(REPO_TERMS_PATH)/trm_ixxlupd.xml \
                    $(REPO_TERMS_PATH)/trm_ixxluts.xml \
-                   $(REPO_ENGINE)
+
 	 $(REPO_ENGINE) --postgresql=arewards > arewards.sql
 	 $(REPO_ENGINE) --table=arewards > table_arewards.ada
 	 gnatchop -gnat12 -w table_arewards.ada
@@ -58,7 +58,7 @@ table_freadings.adb : $(REPO_TABLES_PATH)/table_freadings.xml \
                    $(REPO_TERMS_PATH)/trm_reading.xml \
                    $(REPO_TERMS_PATH)/trm_ixxlupd.xml \
                    $(REPO_TERMS_PATH)/trm_ixxluts.xml \
-                   $(REPO_ENGINE)
+
 	 $(REPO_ENGINE) --postgresql=freadings > freadings.sql
 	 $(REPO_ENGINE) --table=freadings > table_freadings.ada
 	 gnatchop -gnat12 -w table_freadings.ada
@@ -73,7 +73,7 @@ table_fsensors.adb : $(REPO_TABLES_PATH)/table_fsensors.xml \
                    $(REPO_TERMS_PATH)/trm_lastnotify.xml \
                    $(REPO_TERMS_PATH)/trm_ixxlupd.xml \
                    $(REPO_TERMS_PATH)/trm_ixxluts.xml \
-                   $(REPO_ENGINE)
+
 	 $(REPO_ENGINE) --postgresql=fsensors > fsensors.sql
 	 $(REPO_ENGINE) --table=fsensors > table_fsensors.ada
 	 gnatchop -gnat12 -w table_fsensors.ada

@@ -2,6 +2,7 @@ with Ada.Strings;
 with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Strings.Unbounded.Text_Io;
+with Ada.Containers.Vectors;
 with Ada.Environment_Variables;
 with Ada.Directories;
 with ada.exceptions;        use ada.exceptions;
@@ -21,10 +22,54 @@ procedure Json_Extracter is
       text_io.put_line (w);
    end Log;
 
-   -----------------------------------------------------
-   procedure On_Solis_Data (filename : string) is
+
+
+ package unbounded_String_Vectors is new
+     Ada.Containers.Vectors
+       (Index_Type   => Natural,
+        Element_Type => unbounded_String);
+
+use unbounded_String_Vectors;
+  ---------------------------------------------------
+
+procedure  Split (V: in out Unbounded_String_Vectors.Vector; Source, Pattern: String) is
+      Start: Positive := 1;
+      Position: Natural;
+      Num_Parts: Natural := 0;
    begin
-      null;
+       loop
+         Position := Ada.Strings.Fixed.Index (Source, Pattern, Start);
+         exit when Position = 0;
+         V.Append (To_Unbounded_String( Source (Start .. Position - 1)));
+         Start := Position + 1;
+      end loop;
+      Num_Parts := Num_Parts + 1;
+      V.Append (To_Unbounded_String( Source(Start .. Source'Last)));
+   end Split;
+
+   -----------------------------------------------------
+
+   procedure On_Solis_Data (Data : string) is
+     V : Unbounded_String_Vectors.Vector;   
+     Sep : String(1..1);
+   begin
+     Sep(1) := ASCII.LF;
+     Split (V, Data, Sep);
+     for I of V loop
+        Log ("line :" & To_String (I));
+        Log ("-----------------------");
+     end loop;
+
+
+--InverterList call success
+
+--   "pow1": 606.32,
+--    "pow2": 1065.6,
+--"batteryCapacitySoc": 68.0,
+-- "pow1": 606,
+--  "pow2": 1066,
+
+
    end On_Solis_Data;
    -----------------------------------------------------
 
@@ -159,7 +204,7 @@ procedure Json_Extracter is
       Text_Io.Open (F, Text_Io.In_File, Filename);
       begin
          loop
-            Append (Ubs, Ada.Strings.Unbounded.Text_Io.Get_Line (F));
+            Append (Ubs, Ada.Strings.Unbounded.Text_Io.Get_Line (F) & ASCII.LF);
          end loop;
       exception
          when Text_Io.End_Error =>
@@ -195,8 +240,8 @@ begin
          content : String := File_Content (Full_Name (Dir_Ent));
       begin
          if s_name (1 .. 5) = "solis" then
-     --      On_Solis_Data (content);
-null;
+            On_Solis_Data (content);
+
          elsif s_name (1 .. 4) = "smhi" then
             On_SMHI_Data (content);
 

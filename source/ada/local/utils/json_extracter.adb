@@ -32,7 +32,7 @@ procedure Json_Extracter is
 use unbounded_String_Vectors;
   ---------------------------------------------------
 
-procedure  Split (V: in out Unbounded_String_Vectors.Vector; Source, Pattern: String) is
+   procedure Split (V: in out Unbounded_String_Vectors.Vector; Source, Pattern: String) is
       Start: Positive := 1;
       Position: Natural;
       Num_Parts: Natural := 0;
@@ -52,24 +52,101 @@ procedure  Split (V: in out Unbounded_String_Vectors.Vector; Source, Pattern: St
    procedure On_Solis_Data (Data : string) is
      V : Unbounded_String_Vectors.Vector;   
      Sep : String(1..1);
+     --startline-1 = 'InverterList call success:'
+     --endline+1 = 'InverterDetails call success:'
+     Start_Line,
+     End_Line   : Natural := 0;
+     Cnt        : Natural := 0;     
+     J          : Json_Value := Create;
+     Data_Items : Json_Array := Empty_Array;
+     Data_Item  : Json_Value := Create_Object;
+     Data_Holder : Unbounded_String;
    begin
      Sep(1) := ASCII.LF;
      Split (V, Data, Sep);
-     for I of V loop
-        Log ("line :" & To_String (I));
-        Log ("-----------------------");
+     for Item of V loop
+        Cnt := Cnt +1;
+        if Start_Line = 0
+          and then To_String(Item) = "InverterList call success:"
+        then
+          Start_Line := Cnt ;
+        end if;  
+     
+        if End_Line = 0
+          and then To_String(Item) = "InverterDetails call success:"
+        then
+          End_Line := Cnt - 2;
+          exit;
+        end if;  
+     
+--        Log ("line :" & To_String (I));
+--        Log ("-----------------------");
      end loop;
 
 
---InverterList call success
+     Log ("Start_Line,End_Line :" & Start_Line'img & End_Line'img);
+     
+     for i in start_Line .. End_Line loop
+       log (i'img & To_STRing(V(i)));
+       if i = 121 
+         or else i = 149
+         or else i = 238 
+       then 
+         null;
+       else
+         Append(Data_Holder, V(i));
+       end if;
+     end loop;  
+     Log ("Data_Holder :" & To_String(Data_Holder));
 
---   "pow1": 606.32,
---    "pow2": 1065.6,
---"batteryCapacitySoc": 68.0,
--- "pow1": 606,
---  "pow2": 1066,
+      J := Read (Strm => To_String(Data_Holder), Filename => "");
+     Log ("J :" & J.Write);
+      
+      Data_Items := Get (J); --convert to array
+      for I in 1 .. Length (Data_Items) loop
+        Data_Item := Get (Data_Items, I);
 
-
+        if Data_Item.Has_Field ("dataTimestampStr") then
+           declare
+              tm : string := data_item.Get ("dataTimestampStr");
+           begin
+              Log ("time " & Tm);
+           end;
+        end if;
+        
+        if Data_Item.Has_Field ("pow1") then
+           declare
+              pow1 : float:= data_item.Get ("pow1");
+           begin
+              Log ("pow1 W "& pow1'img);
+           end;
+        end if;
+        
+        if Data_Item.Has_Field ("pow2") then
+           declare
+              pow2 : float:= data_item.Get ("pow2");
+           begin
+              Log ("pow2 W "& pow2'img);
+           end;
+        end if;
+  
+        if Data_Item.Has_Field ("batteryPower") then
+           declare
+              batteryPower : float:= data_item.Get ("batteryPower");
+           begin
+              Log ("batteryPower kW "& batteryPower'img);
+           end;
+        end if;
+  
+        if Data_Item.Has_Field ("batteryCapacitySoc") then
+           declare
+              batteryCapacitySoc : float:= data_item.Get ("batteryCapacitySoc");
+           begin
+              Log ("batteryCapacitySoc % "& batteryCapacitySoc'img);
+           end;
+        end if;
+      end loop;
+  
    end On_Solis_Data;
    -----------------------------------------------------
 
@@ -254,7 +331,7 @@ begin
       exception
          when E : others =>
             Text_io.put_line ("Error processing file " & Full_Name (Dir_Ent));
-            Text_io.put_line ("content was " & content);
+       --     Text_io.put_line ("content was " & content);
             Text_io.put_line ("Error message was " & Exception_Message (E));
             raise;
       end;

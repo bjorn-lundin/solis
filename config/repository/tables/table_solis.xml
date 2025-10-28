@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-15"?> 
+<BnlBot xmlns="http://www.nonodev.com/bnlbot" xmlns:xcl="http://www.nonodev.com/bnlbot" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Table Desc="logged inverter data" Name="solis" Tablespace="" >
+        <Column Name="time_start"    AllowNull="0" Description="start time"/>
+        <Column Name="time_stop"     AllowNull="0" Description="timestamp"/>
+        <Column Name="power1"        AllowNull="0" Description="power line 1 W"/>
+        <Column Name="power2"        AllowNull="0" Description="power line 2 W"/>
+        <Column Name="battery_power"  AllowNull="0" Description="battery power kWh"/>
+        <Column Name="battery_charge" AllowNull="0" Description="battery charge %"/>
+        <Column Name="ixxlupd"       AllowNull="0" Description="Latest updater"/>
+        <Column Name="ixxluts"       AllowNull="0" Description="Latest update timestamp"/>
+        <Index Columns="time_start" type="primary"/>
+    </Table> 
+</BnlBot>

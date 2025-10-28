@@ -12,7 +12,10 @@ tables: \
     table_airreadings.adb \
     table_arewards.adb \
     table_freadings.adb \
-    table_fsensors.adb
+    table_fsensors.adb \
+    table_prices.adb \
+    table_smhi.adb \
+    table_solis.adb
 
 clreqs: \
 
@@ -31,7 +34,7 @@ table_airreadings.adb : $(REPO_TABLES_PATH)/table_airreadings.xml \
 
 	 $(REPO_ENGINE) --postgresql=airreadings > airreadings.sql
 	 $(REPO_ENGINE) --table=airreadings > table_airreadings.ada
-	 gnatchop -gnat12 -w table_airreadings.ada
+	 gnatchop -gnat2020 -w table_airreadings.ada
 	 rm -f table_airreadings.ada
 ########## stop airreadings ###################
 
@@ -47,7 +50,7 @@ table_arewards.adb : $(REPO_TABLES_PATH)/table_arewards.xml \
 
 	 $(REPO_ENGINE) --postgresql=arewards > arewards.sql
 	 $(REPO_ENGINE) --table=arewards > table_arewards.ada
-	 gnatchop -gnat12 -w table_arewards.ada
+	 gnatchop -gnat2020 -w table_arewards.ada
 	 rm -f table_arewards.ada
 ########## stop arewards ###################
 
@@ -61,7 +64,7 @@ table_freadings.adb : $(REPO_TABLES_PATH)/table_freadings.xml \
 
 	 $(REPO_ENGINE) --postgresql=freadings > freadings.sql
 	 $(REPO_ENGINE) --table=freadings > table_freadings.ada
-	 gnatchop -gnat12 -w table_freadings.ada
+	 gnatchop -gnat2020 -w table_freadings.ada
 	 rm -f table_freadings.ada
 ########## stop freadings ###################
 
@@ -76,9 +79,58 @@ table_fsensors.adb : $(REPO_TABLES_PATH)/table_fsensors.xml \
 
 	 $(REPO_ENGINE) --postgresql=fsensors > fsensors.sql
 	 $(REPO_ENGINE) --table=fsensors > table_fsensors.ada
-	 gnatchop -gnat12 -w table_fsensors.ada
+	 gnatchop -gnat2020 -w table_fsensors.ada
 	 rm -f table_fsensors.ada
 ########## stop fsensors ###################
+
+########## start prices ###################
+table_prices.adb : $(REPO_TABLES_PATH)/table_prices.xml \
+                   $(REPO_TERMS_PATH)/trm_time_start.xml \
+                   $(REPO_TERMS_PATH)/trm_time_stop.xml \
+                   $(REPO_TERMS_PATH)/trm_sek_per_kwh.xml \
+                   $(REPO_TERMS_PATH)/trm_eur_per_kwh.xml \
+                   $(REPO_TERMS_PATH)/trm_exchange_rate.xml \
+                   $(REPO_TERMS_PATH)/trm_ixxlupd.xml \
+                   $(REPO_TERMS_PATH)/trm_ixxluts.xml \
+
+	 $(REPO_ENGINE) --postgresql=prices > prices.sql
+	 $(REPO_ENGINE) --table=prices > table_prices.ada
+	 gnatchop -gnat2020 -w table_prices.ada
+	 rm -f table_prices.ada
+########## stop prices ###################
+
+########## start smhi ###################
+table_smhi.adb : $(REPO_TABLES_PATH)/table_smhi.xml \
+                   $(REPO_TERMS_PATH)/trm_time_start.xml \
+                   $(REPO_TERMS_PATH)/trm_time_stop.xml \
+                   $(REPO_TERMS_PATH)/trm_air_temperature.xml \
+                   $(REPO_TERMS_PATH)/trm_wind_speed.xml \
+                   $(REPO_TERMS_PATH)/trm_cloud_coverage.xml \
+                   $(REPO_TERMS_PATH)/trm_ixxlupd.xml \
+                   $(REPO_TERMS_PATH)/trm_ixxluts.xml \
+
+	 $(REPO_ENGINE) --postgresql=smhi > smhi.sql
+	 $(REPO_ENGINE) --table=smhi > table_smhi.ada
+	 gnatchop -gnat2020 -w table_smhi.ada
+	 rm -f table_smhi.ada
+########## stop smhi ###################
+
+########## start solis ###################
+table_solis.adb : $(REPO_TABLES_PATH)/table_solis.xml \
+                   $(REPO_TERMS_PATH)/trm_time_start.xml \
+                   $(REPO_TERMS_PATH)/trm_time_stop.xml \
+                   $(REPO_TERMS_PATH)/trm_power1.xml \
+                   $(REPO_TERMS_PATH)/trm_power2.xml \
+                   $(REPO_TERMS_PATH)/trm_battery_power.xml \
+                   $(REPO_TERMS_PATH)/trm_battery_charge.xml \
+                   $(REPO_TERMS_PATH)/trm_ixxlupd.xml \
+                   $(REPO_TERMS_PATH)/trm_ixxluts.xml \
+
+	 $(REPO_ENGINE) --postgresql=solis > solis.sql
+	 $(REPO_ENGINE) --table=solis > table_solis.ada
+	 gnatchop -gnat2020 -w table_solis.ada
+	 rm -f table_solis.ada
+########## stop solis ###################
 
 
 # delete all tables

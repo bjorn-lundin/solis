@@ -4,7 +4,7 @@
 --                                                                          --
 --                       S p e c                                            --
 --                                                                          --
---  Copyright (c) Björn Lundin 2014                                         --
+--  Copyright (c) Bjï¿½rn Lundin 2014                                         --
 --  All rights reserved.                                                    --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
@@ -16,14 +16,14 @@
 --     notice, this list of conditions and the following disclaimer in      --
 --     the documentation and/or other materials provided with the           --
 --     distribution.                                                        --
---  3. Neither the name of Björn Lundin nor the names of its contributors   --
+--  3. Neither the name of Bjï¿½rn Lundin nor the names of its contributors   --
 --     may be used to endorse or promote products derived from this         --
 --     software without specific prior written permission.                  --
 --                                                                          --
---  THIS SOFTWARE IS PROVIDED BY BJÖRN LUNDIN AND CONTRIBUTORS ``AS         --
+--  THIS SOFTWARE IS PROVIDED BY BJï¿½RN LUNDIN AND CONTRIBUTORS ``AS         --
 --  IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT          --
 --  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS       --
---  FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL BJÖRN       --
+--  FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL BJï¿½RN       --
 --  LUNDIN OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,              --
 --  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES                --
 --  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR      --
@@ -200,11 +200,11 @@ package Sql is
 
    procedure Get (Statement : in Statement_Type;
                   Parameter : in Positive;
-                  Value     : out Fixed_Type);
+                  Value     : out FLoat);
 
    procedure Get (Statement : in Statement_Type;
                   Parameter : in String;
-                  Value     : out Fixed_Type);
+                  Value     : out Float);
 
    procedure Get (Statement : in Statement_Type;
                   Parameter : in Positive;
@@ -284,7 +284,7 @@ package Sql is
 
    procedure Set (Statement : in out Statement_Type;
                   Parameter : in String;
-                  Value     : in Fixed_Type);
+                  Value     : in Float);
 
    procedure Set (Statement : in out Statement_Type;
                   Parameter : in String;

@@ -102,10 +102,12 @@ package body Utils is
    -------------------------------------
 
 --   function F8_Image(F : Fixed_Type; Aft : Natural := 2 ; Exp : Natural := 0) return String is
-   function F8_Image(F : Fixed_Type) return String is
+   function F8_Image(F : Float) return String is
       S : String(1..15) := (others => ' ');
       Dotpos : Integer := 0;
    begin
+   return f'image;
+   
    Move(F'Img, S);
     for I in S'Range loop
       case S(I) is

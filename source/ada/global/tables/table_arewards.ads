@@ -64,7 +64,7 @@ package Table_Arewards is
     Selectionid : Integer_4 := 0 ; -- Primary Key
     Pricets : Time_Type := Time_Type_First ; -- Primary Key
     Side : String(1 .. 4) := (others => ' ') ; -- Primary Key
-    Profit : Fixed_Type := 0.0 ; 
+    Profit : Float := 0.0 ; 
     Ixxlupd : String(1 .. 15) := (others => ' ') ; 
     Ixxluts : Time_Type := Time_Type_First ; 
   end record;

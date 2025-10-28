@@ -8,7 +8,7 @@ package Utils is
 
   function Expand_File_Path (File_Path : String) return String ;
 --  function F8_Image(F : Fixed_Type; Aft : Natural := 2 ; Exp : Natural := 0) return String ;
-  function F8_Image(F : Fixed_Type) return String;
+  function F8_Image(F : Float) return String;
   function Trim (What : String) return String ;
   function Skip_All_Blanks (S : String) return String ;
   function Position (S, Match : String) return Integer;

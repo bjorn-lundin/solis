@@ -3,13 +3,19 @@ with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Strings.Unbounded.Text_Io;
 with Ada.Containers.Vectors;
-with Ada.Environment_Variables;
+--with Ada.Environment_Variables;
 with Ada.Directories;
 with ada.exceptions;        use ada.exceptions;
 
 --with bot_types; use bot_types;
+with Types;
+with Calendar2;
 with Text_io;
 with botcoll.json; use botcoll.json;
+with table_solis;
+with table_smhi;
+with table_prices;
+with sql;
 
 procedure Json_Extracter is
 
@@ -61,6 +67,10 @@ use unbounded_String_Vectors;
      Data_Items : Json_Array := Empty_Array;
      Data_Item  : Json_Value := Create_Object;
      Data_Holder : Unbounded_String;
+     solis_data : table_solis.data_type;
+     eos : Boolean := false;
+     idx : Natural := 0;  
+     Treat : Boolean := false;   
    begin
      Sep(1) := ASCII.LF;
      Split (V, Data, Sep);
@@ -87,14 +97,29 @@ use unbounded_String_Vectors;
      Log ("Start_Line,End_Line :" & Start_Line'img & End_Line'img);
      
      for i in start_Line .. End_Line loop
-       log (i'img & To_STRing(V(i)));
-       if i = 121 
-         or else i = 149
-         or else i = 238 
-       then 
-         null;
-       else
+       log (i'img & To_String(V(i)));
+       Treat := true;
+       Idx := Ada.Strings.Fixed.Index (Source => To_String(V(i)), Pattern => "stationName");
+       if Idx > 0 then
+           Treat := false;
+       end if;  
+       if Treat then
+           Idx := Ada.Strings.Fixed.Index (Source => To_String(V(i)), Pattern => "timeZoneName");
+           if Idx > 0 then
+             Treat := false;
+           end if;  
+       end if; 
+       if Treat then
+           Idx := Ada.Strings.Fixed.Index (Source => To_String(V(i)), Pattern => "picUrl");
+           if Idx > 0 then
+             Treat := false;
+           end if;  
+       end if; 
+
+       if Treat then 
          Append(Data_Holder, V(i));
+       else
+         null; -- has unicode characters we'd like to skip
        end if;
      end loop;  
      Log ("Data_Holder :" & To_String(Data_Holder));
@@ -105,12 +130,16 @@ use unbounded_String_Vectors;
       Data_Items := Get (J); --convert to array
       for I in 1 .. Length (Data_Items) loop
         Data_Item := Get (Data_Items, I);
+        solis_data := table_solis.Empty_Data;
 
         if Data_Item.Has_Field ("dataTimestampStr") then
-           declare
-              tm : string := data_item.Get ("dataTimestampStr");
+           declare                      --2025-10-12 16:51:32 
+              tm : string := data_item.Get ("dataTimestampStr");       
+              use Calendar2;       
            begin
               Log ("time " & Tm);
+              solis_data.time_start := Calendar2.To_Time_Type (tm(1..19) & ".000");
+              solis_data.time_stop := solis_data.time_start + (0,0,5,0,0); -- + 5 minutes
            end;
         end if;
         
@@ -118,6 +147,7 @@ use unbounded_String_Vectors;
            declare
               pow1 : float:= data_item.Get ("pow1");
            begin
+              solis_data.power1 := pow1;
               Log ("pow1 W "& pow1'img);
            end;
         end if;
@@ -126,6 +156,7 @@ use unbounded_String_Vectors;
            declare
               pow2 : float:= data_item.Get ("pow2");
            begin
+              solis_data.power2 := pow2;
               Log ("pow2 W "& pow2'img);
            end;
         end if;
@@ -134,6 +165,7 @@ use unbounded_String_Vectors;
            declare
               batteryPower : float:= data_item.Get ("batteryPower");
            begin
+              solis_data.battery_power := batteryPower;
               Log ("batteryPower kW "& batteryPower'img);
            end;
         end if;
@@ -142,9 +174,18 @@ use unbounded_String_Vectors;
            declare
               batteryCapacitySoc : float:= data_item.Get ("batteryCapacitySoc");
            begin
+               solis_data.Battery_Charge := batteryCapacitySoc;
               Log ("batteryCapacitySoc % "& batteryCapacitySoc'img);
            end;
         end if;
+
+        solis_data.read(eos);
+        if eos then
+          solis_data.insert;
+        else
+          solis_data.update_withcheck;
+        end if;
+
       end loop;
   
    end On_Solis_Data;
@@ -169,7 +210,8 @@ use unbounded_String_Vectors;
       J                 : Json_Value := Create;
       time_Series_Array : Json_Array := Empty_Array;
       data_item         : Json_Value := Create_Object;
-
+      smhi_data : table_smhi.data_type;
+      eos : Boolean := false;
    begin
       J := Read (Strm => Data, Filename => "");
       if J.Has_Field ("timeSeries") then
@@ -177,11 +219,13 @@ use unbounded_String_Vectors;
          for I in 1 .. Length (time_Series_Array) loop
             Log ("we have result #:" & I'Img);
             data_item := Get (time_Series_Array, I);
+            smhi_data := table_smhi.Empty_Data;
 
             if data_item.Has_Field ("time") then
                declare
                   tm : string := data_item.Get ("time");
                begin
+                  smhi_data.time_start := Calendar2.To_Time_Type (tm(1..19) & ".000");
                   Log ("time " & Tm);
                end;
             end if;
@@ -190,6 +234,7 @@ use unbounded_String_Vectors;
                declare
                   ipst : string := data_item.Get ("intervalParametersStartTime");
                begin
+                  smhi_data.time_stop := Calendar2.To_Time_Type (ipst(1..19) & ".000");
                   Log ("intervalParametersStartTime " & ipst);
                end;
             end if;
@@ -201,6 +246,7 @@ use unbounded_String_Vectors;
                      air_temperature : float :=
                        data_item.Get ("air_temperature");
                   begin
+                     smhi_data.air_temperature := air_temperature;
                      Log ("air_temperature: " & air_temperature'image);
                   end;
                end if;
@@ -209,20 +255,30 @@ use unbounded_String_Vectors;
                   declare
                      wind_speed : float := data_item.Get ("wind_speed");
                   begin
+                     smhi_data.wind_speed := wind_speed;
                      Log ("wind_speed: " & wind_speed'image);
                   end;
                end if;
 
                if data_item.Has_Field ("cloud_area_fraction") then
                   declare
-                     cloud_area_fraction : Long_Long_Integer :=
+                     Cloud_Coverage : Long_Long_Integer :=
                        data_item.Get ("cloud_area_fraction");
                   begin
-                     Log("cloud_area_fraction: " & cloud_area_fraction'image);
+                     smhi_data.Cloud_Coverage := Types.Integer_4(Cloud_Coverage);
+                     Log("cloud_area_fraction: " & Cloud_Coverage'image);
                   end;
                end if;
-
             end if;
+
+            smhi_data.read(eos);
+            if eos then
+              smhi_data.insert;
+            else
+              smhi_data.update_withcheck;
+            end if;
+
+
          end loop;
       end if;
    end on_SMHI_Data;
@@ -231,6 +287,9 @@ use unbounded_String_Vectors;
       J                 : Json_Value := Create;
       data_items        : Json_Array := Empty_Array;
       data_item         : Json_Value := Create_Object;
+      Price_Data      : Table_Prices.Data_Type;
+      eos : Boolean := false;
+
 --[
 --{"SEK_per_kWh":0.05878,"EUR_per_kWh":0.00532,"EXR":11.04933,"time_start":"2025-10-12T00:00:00+02:00","time_end":"2025-10-12T00:15:00+02:00"},
 --{"SEK_per_kWh":0.04751,"EUR_per_kWh":0.0043,"EXR":11.04933,"time_start":"2025-10-12T00:15:00+02:00","time_end":"2025-10-12T00:30:00+02:00"},      
@@ -243,18 +302,41 @@ use unbounded_String_Vectors;
 
       for I in 1 .. Length (data_items) loop
          data_item := Get (data_items, I);
+
+         Price_Data := Table_Prices.Empty_Data; 
+         
          if data_item.Has_Field ("SEK_per_kWh") then
             declare
                sek : float:= data_item.Get ("SEK_per_kWh");
             begin
+               Price_Data.SEK_per_kWh := sek;
                Log ("SEK_per_kWh "& sek'img);
             end;
          end if;
-         
+
+         if data_item.Has_Field ("Eur_per_kWh") then
+            declare
+               eur : float:= data_item.Get ("Eur_per_kWh");
+            begin
+               Price_Data.Eur_per_kWh := eur;
+               Log ("Eur_per_kWh "& eur'img);
+            end;
+         end if;
+
+         if data_item.Has_Field ("EXR") then
+            declare
+               exr : float:= data_item.Get ("EXR");
+            begin
+               Price_Data.Exchange_Rate := exr;
+               Log ("EXR "& exr'img);
+            end;
+         end if;
+
          if data_item.Has_Field ("time_start") then
             declare
                ts : string:= data_item.Get ("time_start");
             begin
+               Price_Data.Time_Start := Calendar2.To_Time_Type (ts(1..19) & ".000");
                Log ("time_start" & ts);
             end;
          end if;
@@ -263,9 +345,17 @@ use unbounded_String_Vectors;
             declare
                te : string:= data_item.Get ("time_end");
             begin
+               Price_Data.Time_Stop := Calendar2.To_Time_Type (te(1..19) & ".000");
                Log ("time_end " & te);
             end;
          end if;
+
+         Price_Data.read(eos);
+         if eos then
+            Price_Data.insert;
+         else
+            Price_Data.update_withcheck;
+         end if;         
 
       end loop;
 
@@ -294,7 +384,16 @@ use unbounded_String_Vectors;
    Dir_Ent : Directory_Entry_Type;
    Search  : Search_Type;
 
+   T : Sql.Transaction_Type;
 begin
+
+   Sql.Connect(Host     => "localhost",
+               Port     => 5432,
+               Db_Name  => "bnl",
+               Login    => "bnl",
+               Password => "ld4BC9Q51FU9CYjC21gp");
+
+   T.Start;            
 
    -- find data - *.json
    -- for each file, check type and call correct parser
@@ -337,4 +436,7 @@ begin
       end;
    end loop;
    End_Search (Search => Search);
+   T.Commit;
+   Sql.Close_Session;
+
 end Json_Extracter;

@@ -526,7 +526,7 @@ package body Table_Arewards is
         Tmp : Float := 0.0;
       begin
         Tmp := JSON_Data.Get("profit");
-        Data.Profit := Fixed_Type(Tmp);
+        Data.Profit := Float(Tmp);
       end;
     end if;
 
@@ -675,7 +675,7 @@ package body Table_Arewards is
       elsif The_Tag = Side_Name then
        Fix_String(The_Value, Handler.Arewards_Data.Side);
       elsif The_Tag = Profit_Name then
-       Handler.Arewards_Data.Profit := Fixed_Type'value(The_Value);
+       Handler.Arewards_Data.Profit := Float'value(The_Value);
       elsif The_Tag = Ixxlupd_Name then
        Fix_String(The_Value, Handler.Arewards_Data.Ixxlupd);
       elsif The_Tag = Ixxluts_Name then

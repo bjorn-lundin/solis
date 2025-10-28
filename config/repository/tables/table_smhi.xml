@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-15"?> 
+<BnlBot xmlns="http://www.nonodev.com/bnlbot" xmlns:xcl="http://www.nonodev.com/bnlbot" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Table Desc="logged wheater data" Name="smhi" Tablespace="" >
+        <Column Name="time_start"      AllowNull="0" Description="start time"/>
+        <Column Name="time_stop"       AllowNull="0" Description="timestamp"/>
+        <Column Name="air_temperature" AllowNull="0" Description="temp value"/>
+        <Column Name="wind_speed"      AllowNull="0" Description="wind speed value"/>
+        <Column Name="cloud_coverage"  AllowNull="0" Description="cloud area fraction value"/>
+        <Column Name="ixxlupd"         AllowNull="0" Description="Latest updater"/>
+        <Column Name="ixxluts"         AllowNull="0" Description="Latest update timestamp"/>
+        <Index Columns="time_start" type="primary"/>
+    </Table> 
+</BnlBot>

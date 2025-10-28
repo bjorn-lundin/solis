@@ -6,4 +6,4 @@
 
 target/**
 source/ada/make.log
-
+source/ada/global/tables/*

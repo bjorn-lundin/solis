@@ -385,7 +385,8 @@ package body Repository is
         end if;
       when A_Int         => return "Integer_4";
       when A_Big_Int     => return "Integer_8";
-      when A_Double      => return "Fixed_Type";
+--      when A_Double      => return "Fixed_Type";
+      when A_Double      => return "Float";
       when A_Boolean     => return "Boolean";
       when A_Short_Code  => return "Integer_4";
       when A_Date        => return "Time_Type";
@@ -786,7 +787,7 @@ package body Repository is
                 Put_Line(Receipt_Prefix & " $(REPO_ENGINE) --clreq=" & File_Name & " > table_" & File_Name & ".ada");
             end case;
 
-            Put_Line(Receipt_Prefix & " gnatchop -gnat12 -w table_" & File_Name & ".ada");
+            Put_Line(Receipt_Prefix & " gnatchop -gnat2020 -w table_" & File_Name & ".ada");
             Put_Line(Receipt_Prefix & " rm -f table_" & File_Name & ".ada");
             Put_Line("########## stop " & File_Name & " ###################");
         end;

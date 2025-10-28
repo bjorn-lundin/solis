@@ -444,7 +444,7 @@ package body Table_Airreadings is
         Tmp : Float := 0.0;
       begin
         Tmp := JSON_Data.Get("temperature");
-        Data.Temperature := Fixed_Type(Tmp);
+        Data.Temperature := Float(Tmp);
       end;
     end if;
 
@@ -462,7 +462,7 @@ package body Table_Airreadings is
         Tmp : Float := 0.0;
       begin
         Tmp := JSON_Data.Get("humidity");
-        Data.Humidity := Fixed_Type(Tmp);
+        Data.Humidity := Float(Tmp);
       end;
     end if;
 
@@ -480,7 +480,7 @@ package body Table_Airreadings is
         Tmp : Float := 0.0;
       begin
         Tmp := JSON_Data.Get("altitude");
-        Data.Altitude := Fixed_Type(Tmp);
+        Data.Altitude := Float(Tmp);
       end;
     end if;
 
@@ -629,15 +629,15 @@ package body Table_Airreadings is
       elsif The_Tag = Created_Name then
        Handler.Airreadings_Data.Created := Calendar2.To_Time_Type(The_Value(1..11), The_Value(13..24));
       elsif The_Tag = Temperature_Name then
-       Handler.Airreadings_Data.Temperature := Fixed_Type'value(The_Value);
+       Handler.Airreadings_Data.Temperature := Float'value(The_Value);
       elsif The_Tag = Pressure_Name then
        Handler.Airreadings_Data.Pressure := Integer_4'value(The_Value);
       elsif The_Tag = Humidity_Name then
-       Handler.Airreadings_Data.Humidity := Fixed_Type'value(The_Value);
+       Handler.Airreadings_Data.Humidity := Float'value(The_Value);
       elsif The_Tag = Gasresistance_Name then
        Handler.Airreadings_Data.Gasresistance := Integer_4'value(The_Value);
       elsif The_Tag = Altitude_Name then
-       Handler.Airreadings_Data.Altitude := Fixed_Type'value(The_Value);
+       Handler.Airreadings_Data.Altitude := Float'value(The_Value);
       elsif The_Tag = Ixxlupd_Name then
        Fix_String(The_Value, Handler.Airreadings_Data.Ixxlupd);
       elsif The_Tag = Ixxluts_Name then

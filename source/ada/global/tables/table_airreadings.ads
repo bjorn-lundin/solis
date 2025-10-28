@@ -66,11 +66,11 @@ package Table_Airreadings is
   type Data_Type is new Table_Utils.Root_Table_Type with record
     Macaddress : String(1 .. 6) := (others => ' ') ; -- Primary Key
     Created : Time_Type := Time_Type_First ; -- Primary Key
-    Temperature : Fixed_Type := 0.0 ; 
+    Temperature : Float := 0.0 ; 
     Pressure : Integer_4 := 0 ; 
-    Humidity : Fixed_Type := 0.0 ; 
+    Humidity : Float := 0.0 ; 
     Gasresistance : Integer_4 := 0 ; 
-    Altitude : Fixed_Type := 0.0 ; 
+    Altitude : Float := 0.0 ; 
     Ixxlupd : String(1 .. 15) := (others => ' ') ; 
     Ixxluts : Time_Type := Time_Type_First ; 
   end record;

@@ -5,17 +5,20 @@ with Ada.Strings.Unbounded.Text_Io;
 with Ada.Containers.Vectors;
 --with Ada.Environment_Variables;
 with Ada.Directories;
-with ada.exceptions;        use ada.exceptions;
+with Ada.Exceptions;        use Ada.Exceptions;
+
+with Ada.Calendar; use Ada.Calendar;
+with Ada.Calendar.Formatting;
 
 --with bot_types; use bot_types;
-with Types;
+with Types; use Types;
 with Calendar2;
-with Text_io;
-with botcoll.json; use botcoll.json;
-with table_solis;
-with table_smhi;
-with table_prices;
-with sql;
+with Text_IO;
+with Botcoll.json; use Botcoll.json;
+with Table_Solis;
+with Table_Smhi;
+with Table_Prices;
+with Sql;
 
 procedure Json_Extracter is
 
@@ -23,20 +26,58 @@ procedure Json_Extracter is
    --    package A_Sorter is new Directory_List_Package.Generic_Sorting;
    --    File_List : Directory_List_Package.List;
 
+   Epoch_Start : constant Time := Ada.Calendar.Formatting.Time_Of(1970, 1, 1, 0.0);
+
    procedure Log (w : string) is
    begin
       text_io.put_line (w);
    end Log;
+   
+   ---------------------------------------------------
 
+   package Unbounded_String_Vectors is new
+      Ada.Containers.Vectors
+        (Index_Type   => Natural,
+         Element_Type => Unbounded_String);
 
+   use Unbounded_String_Vectors;
 
- package unbounded_String_Vectors is new
-     Ada.Containers.Vectors
-       (Index_Type   => Natural,
-        Element_Type => unbounded_String);
-
-use unbounded_String_Vectors;
   ---------------------------------------------------
+
+  procedure Map_To_Epoch (Timein : in Calendar2.Time_Type; Epoch : in out Natural) is
+    Prev_5_Min : Calendar2.Time_Type;
+    Next_5_Min : Calendar2.Time_Type;
+    Secs : Calendar2.Seconds_Type;
+    use Calendar2;
+   begin
+--      Log ("Timein:" & Calendar2.String_Date_Time_Iso(Timein));
+      Secs := 0;
+      Prev_5_Min := Timein;
+      loop
+--        Log ("prev_5_min:" & Calendar2.String_Date_Time_Iso(prev_5_min));
+        Prev_5_Min := Timein - Calendar2.To_Interval(Secs);
+        if Prev_5_Min.Minute mod 5 = 0
+          and then Prev_5_Min.Second = 0
+        then
+          exit;
+        end if;  
+        Secs := Secs + 1;
+      end loop;
+
+      Next_5_Min := Prev_5_Min + (0,0,5,0,0);
+  --    Log ("----------------------------");
+  --    Log ("prev_5_min:" & Calendar2.String_Date_Time_Iso(prev_5_min));
+  --    Log ("next_5_min:" & Calendar2.String_Date_Time_Iso(next_5_min));
+
+      if Secs < 150  then
+        Epoch := Natural(Calendar2.To_Calendar_Time(Prev_5_Min) - Epoch_Start);
+      else
+        Epoch := Natural(Calendar2.To_Calendar_Time(Next_5_Min) - Epoch_Start);
+      end if;
+
+   end Map_To_Epoch;
+
+   -----------------------------------------------------
 
    procedure Split (V: in out Unbounded_String_Vectors.Vector; Source, Pattern: String) is
       Start: Positive := 1;
@@ -67,10 +108,11 @@ use unbounded_String_Vectors;
      Data_Items : Json_Array := Empty_Array;
      Data_Item  : Json_Value := Create_Object;
      Data_Holder : Unbounded_String;
-     solis_data : table_solis.data_type;
-     eos : Boolean := false;
-     idx : Natural := 0;  
+     Solis_Data  : Table_Solis.Data_Type;
+     Eos : Boolean := false;
+     Idx : Natural := 0;  
      Treat : Boolean := false;   
+     Epoch : Natural := 0;
    begin
      Sep(1) := ASCII.LF;
      Split (V, Data, Sep);
@@ -92,7 +134,6 @@ use unbounded_String_Vectors;
 --        Log ("line :" & To_String (I));
 --        Log ("-----------------------");
      end loop;
-
 
      Log ("Start_Line,End_Line :" & Start_Line'img & End_Line'img);
      
@@ -124,7 +165,7 @@ use unbounded_String_Vectors;
      end loop;  
      Log ("Data_Holder :" & To_String(Data_Holder));
 
-      J := Read (Strm => To_String(Data_Holder), Filename => "");
+     J := Read (Strm => To_String(Data_Holder), Filename => "");
      Log ("J :" & J.Write);
       
       Data_Items := Get (J); --convert to array
@@ -135,10 +176,14 @@ use unbounded_String_Vectors;
         if Data_Item.Has_Field ("dataTimestampStr") then
            declare                      --2025-10-12 16:51:32 
               tm : string := data_item.Get ("dataTimestampStr");       
-              use Calendar2;       
+              use Calendar2;
            begin
               Log ("time " & Tm);
               solis_data.time_start := Calendar2.To_Time_Type (tm(1..19) & ".000");
+              Map_To_Epoch (solis_data.time_start, Epoch);
+              Solis_Data.epoch := Integer_4(Epoch);
+
+              Log ("time start epoch " & Epoch'Img);  
               solis_data.time_stop := solis_data.time_start + (0,0,5,0,0); -- + 5 minutes
            end;
         end if;
@@ -208,76 +253,78 @@ use unbounded_String_Vectors;
 
    procedure on_SMHI_Data (Data : String) is
       J                 : Json_Value := Create;
-      time_Series_Array : Json_Array := Empty_Array;
-      data_item         : Json_Value := Create_Object;
-      smhi_data : table_smhi.data_type;
-      eos : Boolean := false;
+      Time_Series_Array : Json_Array := Empty_Array;
+      Data_Item         : Json_Value := Create_Object;
+      SMHI_Data         : table_smhi.data_type;
+      Eos : Boolean := false;
+      Epoch : Natural := 0;
    begin
       J := Read (Strm => Data, Filename => "");
       if J.Has_Field ("timeSeries") then
-         time_Series_Array := j.Get ("timeSeries");
-         for I in 1 .. Length (time_Series_Array) loop
+         Time_Series_Array := J.Get ("timeSeries");
+         for I in 1 .. Length (Time_Series_Array) loop
             Log ("we have result #:" & I'Img);
-            data_item := Get (time_Series_Array, I);
-            smhi_data := table_smhi.Empty_Data;
+            Data_Item := Get (Time_Series_Array, I);
+            SMHI_Data := table_smhi.Empty_Data;
 
-            if data_item.Has_Field ("time") then
+            if Data_Item.Has_Field ("time") then
                declare
-                  tm : string := data_item.Get ("time");
+                  tm : string := Data_Item.Get ("time");
                begin
-                  smhi_data.time_start := Calendar2.To_Time_Type (tm(1..19) & ".000");
+                  SMHI_Data.time_start := Calendar2.To_Time_Type (tm(1..19) & ".000");
                   Log ("time " & Tm);
                end;
             end if;
 
-            if data_item.Has_Field ("intervalParametersStartTime") then
+            if Data_Item.Has_Field ("intervalParametersStartTime") then
                declare
-                  ipst : string := data_item.Get ("intervalParametersStartTime");
+                  ipst : string := Data_Item.Get ("intervalParametersStartTime");
                begin
-                  smhi_data.time_stop := Calendar2.To_Time_Type (ipst(1..19) & ".000");
+                  SMHI_Data.time_stop := Calendar2.To_Time_Type (ipst(1..19) & ".000");
                   Log ("intervalParametersStartTime " & ipst);
+                  Map_To_Epoch (SMHI_Data.time_start, Epoch);
+                  SMHI_Data.epoch := Integer_4(Epoch);
                end;
             end if;
 
-            if data_item.Has_Field ("data") then
-               data_item := data_item.Get ("data");
-               if data_item.Has_Field ("air_temperature") then
+            if Data_Item.Has_Field ("data") then
+               Data_Item := Data_Item.Get ("data");
+               if Data_Item.Has_Field ("air_temperature") then
                   declare
                      air_temperature : float :=
-                       data_item.Get ("air_temperature");
+                       Data_Item.Get ("air_temperature");
                   begin
-                     smhi_data.air_temperature := air_temperature;
+                     SMHI_Data.air_temperature := air_temperature;
                      Log ("air_temperature: " & air_temperature'image);
                   end;
                end if;
 
-               if data_item.Has_Field ("wind_speed") then
+               if Data_Item.Has_Field ("wind_speed") then
                   declare
-                     wind_speed : float := data_item.Get ("wind_speed");
+                     wind_speed : float := Data_Item.Get ("wind_speed");
                   begin
-                     smhi_data.wind_speed := wind_speed;
+                     SMHI_Data.wind_speed := wind_speed;
                      Log ("wind_speed: " & wind_speed'image);
                   end;
                end if;
 
-               if data_item.Has_Field ("cloud_area_fraction") then
+               if Data_Item.Has_Field ("cloud_area_fraction") then
                   declare
                      Cloud_Coverage : Long_Long_Integer :=
-                       data_item.Get ("cloud_area_fraction");
+                       Data_Item.Get ("cloud_area_fraction");
                   begin
-                     smhi_data.Cloud_Coverage := Types.Integer_4(Cloud_Coverage);
+                     SMHI_Data.Cloud_Coverage := Types.Integer_4(Cloud_Coverage);
                      Log("cloud_area_fraction: " & Cloud_Coverage'image);
                   end;
                end if;
             end if;
 
-            smhi_data.read(eos);
+            SMHI_Data.Read(eos);
             if eos then
-              smhi_data.insert;
+              SMHI_Data.Insert;
             else
-              smhi_data.update_withcheck;
+              SMHI_Data.Update_Withcheck;
             end if;
-
 
          end loop;
       end if;
@@ -288,7 +335,8 @@ use unbounded_String_Vectors;
       data_items        : Json_Array := Empty_Array;
       data_item         : Json_Value := Create_Object;
       Price_Data      : Table_Prices.Data_Type;
-      eos : Boolean := false;
+      Eos : Boolean := false;
+      Epoch : Natural := 0;
 
 --[
 --{"SEK_per_kWh":0.05878,"EUR_per_kWh":0.00532,"EXR":11.04933,"time_start":"2025-10-12T00:00:00+02:00","time_end":"2025-10-12T00:15:00+02:00"},
@@ -338,6 +386,8 @@ use unbounded_String_Vectors;
             begin
                Price_Data.Time_Start := Calendar2.To_Time_Type (ts(1..19) & ".000");
                Log ("time_start" & ts);
+               Map_To_Epoch (Price_Data.Time_Start, Epoch);
+               Price_Data.epoch := Integer_4(Epoch);
             end;
          end if;
 

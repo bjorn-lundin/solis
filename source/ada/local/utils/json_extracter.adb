@@ -474,36 +474,36 @@ begin
       exit when not More_Entries (Search => Search);
       Get_Next_Entry (Search => Search, Directory_Entry => Dir_Ent);
       --        Text_io.put_line(Full_Name(Dir_Ent));
-      Text_io.put_line (Simple_Name (Dir_Ent));
+      Text_io.Put_Line (Simple_Name (Dir_Ent));
 
       --        Text_io.put_line(Kind(full_Name (Dir_Ent))'img);
       --        File_List.Append(Fname);
 
       declare
-         s_name  : string := Simple_Name (Dir_Ent);
-         Full_Name : string := Full_Name (Dir_Ent);
-         content : String := File_Content (Full_Name);
+         S_Name  : String := Simple_Name (Dir_Ent);
+         F_Name : String := Full_Name (Dir_Ent);
+         Content : String := File_Content (F_Name);
       begin
-         if s_name (1 .. 5) = "solis" then
-            On_Solis_Data (content);
-            Ada.Directories.Move (Full_Name, "/home/bnl/solis/treated/" & s_name);
+         if S_Name (1 .. 5) = "solis" then
+            On_Solis_Data (Content);
+            Ada.Directories.Rename (F_Name, "/home/bnl/solis/treated/" & S_Name);
 
-         elsif s_name (1 .. 4) = "smhi" then
-            On_SMHI_Data (content);
-            Ada.Directories.Move (Full_Name, "/home/bnl/solis/treated/" & s_name);
+         elsif S_Name (1 .. 4) = "smhi" then
+            On_SMHI_Data (Content);
+            Ada.Directories.Rename (F_Name, "/home/bnl/solis/treated/" & S_Name);
 
-         elsif s_name (1 .. 8) = "elpriser" then
-            On_Elpriser_Data (content);
-            Ada.Directories.Move (Full_Name, "/home/bnl/solis/treated/" & s_name);
+         elsif S_Name (1 .. 8) = "elpriser" then
+            On_Elpriser_Data (Content);
+            Ada.Directories.Rename (F_Name, "/home/bnl/solis/treated/" & S_Name);
 
          else
-            Text_io.put_line ("unhandled file " & Full_Name (Dir_Ent));
+            Text_io.Put_Line ("unhandled file " & F_Name);
          end if;
       exception
          when E : others =>
-            Text_io.put_line ("Error processing file " & Full_Name (Dir_Ent));
-       --     Text_io.put_line ("content was " & content);
-            Text_io.put_line ("Error message was " & Exception_Message (E));
+            Text_io.Put_Line ("Error processing file " & F_Name);
+       --     Text_io.Put_Line ("content was " & content);
+            Text_io.Put_Line ("Error message was " & Exception_Message (E));
             raise;
       end;
    end loop;

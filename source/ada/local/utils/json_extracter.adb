@@ -6,6 +6,7 @@ with Ada.Containers.Vectors;
 --with Ada.Environment_Variables;
 with Ada.Directories;
 with Ada.Exceptions;        use Ada.Exceptions;
+with ADA.ASSERTIONS;
 
 with Ada.Calendar; use Ada.Calendar;
 with Ada.Calendar.Formatting;
@@ -359,7 +360,6 @@ procedure Json_Extracter is
       J := Read (Strm => Data, Filename => "");
       data_items := Get (J); --convert to array
 
-
       for I in 1 .. Length (data_items) loop
          for k in 1 .. 4 loop  -- each 15 min divided into 4 parts of 5 min
             data_item := Get (data_items, I);
@@ -367,20 +367,40 @@ procedure Json_Extracter is
             Price_Data := Table_Prices.Empty_Data; 
             
             if data_item.Has_Field ("SEK_per_kWh") then
-               declare
-                  sek : float:= data_item.Get ("SEK_per_kWh");
                begin
-                  Price_Data.SEK_per_kWh := sek;
-                  Log ("SEK_per_kWh "& sek'img);
+                  declare
+                     sek : float:= data_item.Get ("SEK_per_kWh");
+                  begin
+                     Price_Data.SEK_per_kWh := sek;
+                     Log ("SEK_per_kWh "& sek'img);
+                  end;   
+               exception   
+                  when ADA.ASSERTIONS.ASSERTION_ERROR =>
+                    declare
+                       sek : Long_Long_Integer := data_item.Get ("SEK_per_kWh");
+                     begin
+                       Price_Data.SEK_per_kWh := float(sek);
+                       Log ("SEK_per_kWh "& sek'img);
+                     end;  
                end;
             end if;
 
-            if data_item.Has_Field ("Eur_per_kWh") then
-               declare
-                  eur : float:= data_item.Get ("Eur_per_kWh");
+            if data_item.Has_Field ("EUR_per_kWh") then
                begin
-                  Price_Data.Eur_per_kWh := eur;
-                  Log ("Eur_per_kWh "& eur'img);
+                 declare
+                    eur : float:= data_item.Get ("EUR_per_kWh");
+                 begin
+                    Price_Data.Eur_per_kWh := eur;
+                    Log ("EUR_per_kWh "& eur'img);
+                  end;  
+               exception   
+                  when ADA.ASSERTIONS.ASSERTION_ERROR =>
+                    declare
+                       eur : Long_Long_Integer := data_item.Get ("EUR_per_kWh");
+                     begin
+                       Price_Data.Eur_per_kWh := float(eur);
+                       Log ("EUR_per_kWh "& eur'img);
+                     end;  
                end;
             end if;
 

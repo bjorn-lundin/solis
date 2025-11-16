@@ -16,6 +16,7 @@ project solis is
 
 
    System_Mains := ("repo.adb",
+                    "set_times.adb",
                     "json_extracter.adb"
                     );
 
